@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="lib/three.min.js"></script>
+		<script src="lib/Detector.js"></script>
+		<script src="lib/StereoEffect.js"></script>
+		<script src="lib/DeviceOrientationControls.js"></script>
+		<style type="text/css">
+			body {
+				margin: 0;
+			}
+			#container {
+				padding-bottom: 100px;
+			}
+			canvas {
+				display: block;
+			}
+			.reticle {
+				position: absolute;
+				background-color: #ff0000;
+				border-radius: 2px;
+				width: 5px;
+				height: 5px;
+				top: 50%;
+				display: block;
+				transform: translate(-50%, -50%);	/* Set hot-point to centre of element*/
+			}
+			.reticle-left {
+				left: 25%;
+			}
+			.reticle-right {
+				left: 75%;
+			}
+			#ui {
+				position: absolute;
+				background-color: #ff0000;
+				width: 10%;
+				height: 20%;
+				top: 0;
+				left: 50%;
+				transform: translateX(-50%);
+
+			}
+		</style>
+
+		<script>
+			window.addEventListener('load', function() {
+				init();
+				animate();
+			});
+		</script>
+	</head>
+	<body>
+		<script>
+
+			if (!Detector.webgl) {
+				Detector.addGetWebGLMessage();
+			}
+
+			var container;
+
+			var camera, scene, renderer, effect;
+
+			var mesh, lightMesh;
+			var spheres = [];
+
+			var directionalLight, pointLight;
+
+			var windowHalfX = window.innerWidth / 2;
+			var windowHalfY = window.innerHeight / 2;
+
+			var objData = [
+				{ name:"North", geo:[5,5,5], col:0x0000FF, pos:[0,0,20], rot:[0,deg2rad(45),0] },	// North
+				{ name:"East", geo:[5,5,5], col:0x00FF00, pos:[-20,0,0], rot:[0,deg2rad(45),0] },	// East
+				{ name:"South", geo:[5,5,5], col:0x00FFFF, pos:[0,0,-20], rot:[0,deg2rad(45),0] },	// South
+				{ name:"West", geo:[5,5,5], col:0xFF0000, pos:[20,0,0], rot:[0,deg2rad(45),0] },	// West
+				{ name:"Up", geo:[5,5,5], col:0xFF00FF, pos:[0,20,00], rot:[deg2rad(45),0,deg2rad(45)] },	// Up
+				{ name:"Down", geo:[5,5,5], col:0xFFFF00, pos:[0,-20,0], rot:[deg2rad(45),0,deg2rad(45)] }	// Down
+			];
+
+			var objects = [];
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				container.id = "container";
+				document.body.appendChild( container );
+
+				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 100000 );
+
+				controls = new THREE.DeviceOrientationControls( camera );
+
+				scene = new THREE.Scene();
+
+	// Nearest objects
+	objData.forEach(function(obj) {
+		var geometry = new THREE.BoxGeometry(obj.geo[0],obj.geo[1],obj.geo[2]);
+		var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color:obj.col }));
+		mesh.position.set(obj.pos[0], obj.pos[1]-10, obj.pos[2]);
+		mesh.rotation.set(obj.rot[0], obj.rot[1], obj.rot[2]);
+		mesh.name = obj.name + " near";
+		objects.push(mesh);
+		scene.add(mesh);
+	});
+
+	// Mid objects
+	objData.forEach(function(obj) {
+		var geometry = new THREE.BoxGeometry(obj.geo[0],obj.geo[1],obj.geo[2]);
+		var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color:obj.col }));
+		mesh.position.set(obj.pos[0]*5, obj.pos[1]*5-10, obj.pos[2]*5);
+		mesh.rotation.set(obj.rot[0], obj.rot[1], obj.rot[2]);
+		objects.push(mesh);
+		mesh.name = obj.name + " far";
+		scene.add(mesh);
+	});
+	
+
+	ambientLight = new THREE.AmbientLight( 0x404040 );
+	scene.add( ambientLight );
+
+	pointLight = new THREE.PointLight( 0xFFFFFF );
+	pointLight.position.set(-20, 20, -20 );
+	pointLight.lookAt(scene.position);
+	scene.add( pointLight );
+
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				container.appendChild( renderer.domElement );
+
+				effect = new THREE.StereoEffect( renderer );
+				effect.eyeSeparation = 10;
+				effect.setSize( window.innerWidth, window.innerHeight );
+
+				var ui = document.createElement('div');
+				ui.id = "ui";
+				document.body.appendChild(ui);
+
+				/*ui.addEventListener('touchstart', interact);*/
+				ui.addEventListener('mousedown', interact);
+
+				function interact() {
+					//alert("Touchstart!");
+					var raycaster = new THREE.Raycaster();
+					raycaster.setFromCamera(new THREE.Vector2(0,0), camera );
+					var intersects = raycaster.intersectObjects( objects );
+
+					if ( intersects.length > 0 ) {
+
+						var intersect = intersects[ 0 ];
+
+						var object = intersect.object;
+
+						speechSynthesis.speak(new SpeechSynthesisUtterance(object.name));
+					}
+
+				}
+
+				var reticleL = document.createElement("div");
+				reticleL.className = "reticle reticle-left";
+				document.body.appendChild(reticleL);
+
+				var reticleR = document.createElement("div");
+				reticleR.className = "reticle reticle-right";
+				document.body.appendChild(reticleR);
+
+
+	renderer.setClearColor( 0xdddddd, 1);
+	render();
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function deg2rad(deg) {
+				return deg * (Math.PI / 180);
+			}
+
+			function onWindowResize() {
+
+				windowHalfX = window.innerWidth / 2,
+				windowHalfY = window.innerHeight / 2,
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				effect.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function animate() {
+				requestAnimationFrame( animate );
+				controls.update();
+				render();
+			}
+
+			function render() {
+				effect.render( scene, camera );
+			}
+
+		</script>
+	</body>
+</html>
