@@ -5,6 +5,7 @@
 		<script src="lib/Detector.js"></script>
 		<script src="lib/StereoEffect.js"></script>
 		<script src="lib/DeviceOrientationControls.js"></script>
+		<script src="SceneLoader.js"></script>
 		<style type="text/css">
 			body {
 				margin: 0;
@@ -72,19 +73,10 @@
 			var objData = null;
 			var objects = [];
 
-			var sceneRequest = new XMLHttpRequest();
-			sceneRequest.onreadystatechange = function () {
-			    var DONE = this.DONE || 4;
-			    if (this.readyState === DONE){
-			    	var data = this.responseText;
-			    	console.log(data);
-			    	objData = JSON.parse(data);
-			    	console.log(objData);
-			        init();
-			    }
-			};
-			sceneRequest.open('GET', 'scene.json', true);
-			sceneRequest.send();
+			sceneLoader.load("scene.json", function (data) {
+		    	objData = data;
+		        init();
+			});
 
 			function init() {
 
@@ -100,7 +92,7 @@
 
 	// Nearest objects
 	objData.forEach(function(obj) {
-		var geometry = new THREE.BoxGeometry(obj.geo[0],obj.geo[1],obj.geo[2]);
+		var geometry = new THREE[obj.geo](obj.dim[0],obj.dim[1],obj.dim[2]);
 		var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color:Number(obj.col) }));
 		mesh.position.set(obj.pos[0], obj.pos[1]-10, obj.pos[2]);
 		mesh.rotation.set(deg2rad(obj.rot[0]), deg2rad(obj.rot[1]), deg2rad(obj.rot[2]));
@@ -111,7 +103,7 @@
 
 	// Mid objects
 	objData.forEach(function(obj) {
-		var geometry = new THREE.BoxGeometry(obj.geo[0],obj.geo[1],obj.geo[2]);
+		var geometry = new THREE[obj.geo](obj.dim[0],obj.dim[1],obj.dim[2]);
 		var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color:Number(obj.col) }));
 		mesh.position.set(obj.pos[0]*5, obj.pos[1]*5-10, obj.pos[2]*5);
 		mesh.rotation.set(deg2rad(obj.rot[0]), deg2rad(obj.rot[1]), deg2rad(obj.rot[2]));
