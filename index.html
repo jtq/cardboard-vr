@@ -63,18 +63,13 @@
 			var camera, scene, renderer, effect;
 
 			var mesh, lightMesh;
-			var spheres = [];
 
-			var directionalLight, pointLight;
+			var ambientLight, pointLight;
 
-			var windowHalfX = window.innerWidth / 2;
-			var windowHalfY = window.innerHeight / 2;
-
-			var objData = null;
 			var objects = [];
 
 			sceneLoader.load("scene.json", function (data) {
-		    	objData = data;
+		    	objects = sceneLoader.inflate(data);
 		        init();
 			});
 
@@ -84,43 +79,12 @@
 				container.id = "container";
 				document.body.appendChild( container );
 
+				// Set up camera, scene, renderer, etc
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 100000 );
 
 				controls = new THREE.DeviceOrientationControls( camera );
 
 				scene = new THREE.Scene();
-
-	// Nearest objects
-	objData.forEach(function(obj) {
-		var geometry = new THREE[obj.geo](obj.dim[0],obj.dim[1],obj.dim[2]);
-		var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color:Number(obj.col) }));
-		mesh.position.set(obj.pos[0], obj.pos[1]-10, obj.pos[2]);
-		mesh.rotation.set(deg2rad(obj.rot[0]), deg2rad(obj.rot[1]), deg2rad(obj.rot[2]));
-		mesh.name = obj.name + " near";
-		objects.push(mesh);
-		scene.add(mesh);
-	});
-
-	// Mid objects
-	objData.forEach(function(obj) {
-		var geometry = new THREE[obj.geo](obj.dim[0],obj.dim[1],obj.dim[2]);
-		var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color:Number(obj.col) }));
-		mesh.position.set(obj.pos[0]*5, obj.pos[1]*5-10, obj.pos[2]*5);
-		mesh.rotation.set(deg2rad(obj.rot[0]), deg2rad(obj.rot[1]), deg2rad(obj.rot[2]));
-		objects.push(mesh);
-		mesh.name = obj.name + " far";
-		scene.add(mesh);
-	});
-	
-
-	ambientLight = new THREE.AmbientLight( 0x404040 );
-	scene.add( ambientLight );
-
-	pointLight = new THREE.PointLight( 0xFFFFFF );
-	pointLight.position.set(-20, 20, -20 );
-	pointLight.lookAt(scene.position);
-	scene.add( pointLight );
-
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -130,11 +94,25 @@
 				effect.eyeSeparation = 10;
 				effect.setSize( window.innerWidth, window.innerHeight );
 
+				// Add objects
+				objects.forEach(function(mesh) {
+		    		scene.add(mesh);
+		    	});
+
+		    	// Lights
+				ambientLight = new THREE.AmbientLight( 0x404040 );
+				scene.add( ambientLight );
+
+				pointLight = new THREE.PointLight( 0xFFFFFF );
+				pointLight.position.set(-20, 20, -20 );
+				pointLight.lookAt(scene.position);
+				scene.add( pointLight );
+
+				// User interface
 				var ui = document.createElement('div');
 				ui.id = "ui";
 				document.body.appendChild(ui);
 
-				/*ui.addEventListener('touchstart', interact);*/
 				ui.addEventListener('mousedown', interact);
 
 				function interact() {
@@ -176,9 +154,6 @@
 			}
 
 			function onWindowResize() {
-
-				windowHalfX = window.innerWidth / 2,
-				windowHalfY = window.innerHeight / 2,
 
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
