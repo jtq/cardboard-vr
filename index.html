@@ -4,7 +4,7 @@
 		<script src="lib/three.min.js"></script>
 		<script src="lib/Detector.js"></script>
 		<script src="lib/StereoEffect.js"></script>
-		<script src="lib/DeviceOrientationControls.js"></script>
+		<script src="lib/DeviceOrientationController.js"></script>
 		<script src="SceneLoader.js"></script>
 		<style type="text/css">
 			body {
@@ -43,13 +43,6 @@
 
 			}
 		</style>
-
-		<script>
-			/*window.addEventListener('load', function() {
-				init();
-				animate();
-			});*/
-		</script>
 	</head>
 	<body>
 		<script>
@@ -82,13 +75,14 @@
 				// Set up camera, scene, renderer, etc
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 100000 );
 
-				controls = new THREE.DeviceOrientationControls( camera );
-
 				scene = new THREE.Scene();
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
 				container.appendChild( renderer.domElement );
+
+				controls = new DeviceOrientationController( camera, renderer.domElement );
+				controls.connect();
 
 				effect = new THREE.StereoEffect( renderer );
 				effect.eyeSeparation = 10;
