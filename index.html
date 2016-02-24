@@ -6,6 +6,7 @@
 		<script src="lib/StereoEffect.js"></script>
 		<script src="lib/DeviceOrientationController.js"></script>
 		<script src="SceneLoader.js"></script>
+		<script src="Tween.js"></script>
 		<style type="text/css">
 			body {
 				margin: 0;
@@ -59,10 +60,12 @@
 
 			var ambientLight, pointLight;
 
-			var objects = [];
+			var objects = [], animations = {};
 
 			sceneLoader.load("scene.json", function (data) {
 		    	objects = sceneLoader.inflate(data);
+		    	animations = data.animations;
+		    	console.log(animations);
 		        init();
 			});
 
@@ -122,6 +125,9 @@
 						var object = intersect.object;
 
 						speechSynthesis.speak(new SpeechSynthesisUtterance(object.name));
+
+						tween.animate(object, animations.grow);
+						tween.start();
 					}
 
 				}

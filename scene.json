@@ -1,15 +1,28 @@
-[
-	{ "name":"North near blue", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x0000FF", "pos":[0,0,20], "rot":[0,45,0] },
-	{ "name":"East near green", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FF00", "pos":[-20,0,0], "rot":[0,45,0] },
-	{ "name":"South near turquoise", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FFFF", "pos":[0,0,-20], "rot":[0,45,0] },
-	{ "name":"West near red", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFF0000", "pos":[20,0,0], "rot":[0,45,0] },
-	{ "name":"Up near mauve", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFF00FF", "pos":[0,20,0], "rot":[45,0,45] },
-	{ "name":"Down near yellow", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFFFF00", "pos":[0,-20,0], "rot":[45,0,45] },
+{
+	"scene": [
+		{ "name":"North near blue", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x0000FF", "pos":[0,0,20], "rot":[0,45,0] },
+		{ "name":"East near green", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FF00", "pos":[-20,0,0], "rot":[0,45,0] },
+		{ "name":"South near turquoise", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FFFF", "pos":[0,0,-20], "rot":[0,45,0] },
+		{ "name":"West near red", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFF0000", "pos":[20,0,0], "rot":[0,45,0] },
+		{ "name":"Up near mauve", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFF00FF", "pos":[0,20,0], "rot":[45,0,45] },
+		{ "name":"Down near yellow", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFFFF00", "pos":[0,-20,0], "rot":[45,0,45] },
 
-	{ "name":"North far blue", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x0000FF", "pos":[0,0,100], "rot":[0,45,0] },
-	{ "name":"East far green", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FF00", "pos":[-100,0,0], "rot":[0,45,0] },
-	{ "name":"South far turquoise", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FFFF", "pos":[0,0,-100], "rot":[0,45,0] },
-	{ "name":"West far red", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFF0000", "pos":[100,0,0], "rot":[0,45,0] },
-	{ "name":"Up far mauve", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFF00FF", "pos":[0,100,0], "rot":[45,0,45] },
-	{ "name":"Down far yellow", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFFFF00", "pos":[0,-100,0], "rot":[45,0,45] }
-]
+		{ "name":"North far blue", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x0000FF", "pos":[0,0,100], "rot":[0,45,0] },
+		{ "name":"East far green", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FF00", "pos":[-100,0,0], "rot":[0,45,0] },
+		{ "name":"South far turquoise", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FFFF", "pos":[0,0,-100], "rot":[0,45,0] },
+		{ "name":"West far red", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFF0000", "pos":[100,0,0], "rot":[0,45,0] },
+		{ "name":"Up far mauve", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFF00FF", "pos":[0,100,0], "rot":[45,0,45] },
+		{ "name":"Down far yellow", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFFFF00", "pos":[0,-100,0], "rot":[45,0,45] }
+	],
+	"animations": {
+		"grow": {
+			"time": 1000,
+			"prop": "scale",
+			"val": {
+				"x": 2,
+				"y": 2,
+				"z": 2
+			}
+		}
+	}
+}

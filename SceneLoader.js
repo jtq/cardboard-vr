@@ -16,7 +16,7 @@ var sceneLoader = {
 
 		var meshes = [];
 
-		objData.forEach(function(obj) {
+		objData.scene.forEach(function(obj) {
 			var geometry = new THREE[obj.geo](obj.dim[0],obj.dim[1],obj.dim[2]);
 			var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color:Number(obj.col) }));
 			mesh.position.set(obj.pos[0], obj.pos[1]-10, obj.pos[2]);
