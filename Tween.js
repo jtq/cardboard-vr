@@ -4,16 +4,16 @@ var tween = {
 	running: false,
 	//progress: 0,
 
-	animate: function(object, target) {
+	animate: function(object, process) {
 		var epochSeconds = new Date().getTime();
 		var animation = {
 			start: epochSeconds,
 			object: object,
-			target: target,
-			origValue: {}
+			process: JSON.parse(JSON.stringify(process)),	// Hacky shortcut to copy simple object
 		};
-		Object.keys(target.val).forEach(function(key) {
-			animation.origValue[key] = object[target.prop][key];
+		animation.process.origValue = {};
+		Object.keys(process.val).forEach(function(key) {
+			animation.process.origValue[key] = object[process.prop][key];
 		});
 		this.animations.push(animation);
 		console.log(animation);
@@ -28,26 +28,26 @@ var tween = {
 			/*self.progress++;
 			currentTime = anim.start + (self.progress * 250);*/
 
-			console.log(anim.start, currentTime);
+			//console.log(anim.start, currentTime);
 
-			Object.keys(anim.target.val).forEach(function(key) {
-				var fraction = (currentTime - anim.start) / anim.target.time;
-				var originalValue = anim.origValue[key];
-				var targetValue = anim.target.val[key];
+			Object.keys(anim.process.val).forEach(function(key) {
+				var fraction = (currentTime - anim.start) / anim.process.time;
+				var originalValue = anim.process.origValue[key];
+				var targetValue = anim.process.val[key];
 				var currentValue = ((targetValue - originalValue) * fraction) + originalValue;
 
 				console.log(key, originalValue + '->' + targetValue, self.progress, fraction, '=', currentValue);
 				if(fraction < 1) {
-					anim.object[anim.target.prop][key] = currentValue;
-					console.log("incremented anim", animIndex, anim.object.name, anim.target.prop, anim.target.val);
+					anim.object[anim.process.prop][key] = currentValue;
+					//console.log("incremented anim", animIndex, anim.object.name, anim.process.prop, anim.process.val);
 				}
 				else {
-					anim.object[anim.target.prop][key] = anim.target.val[key];
+					anim.object[anim.process.prop][key] = anim.process.val[key];
 					self.animations.splice(animIndex,1);
-					console.log("removed anim", animIndex, anim.object.name, anim.target.prop, anim.target.val);
+					//console.log("removed anim", animIndex, anim.object.name, anim.process.prop, anim.process.val);
 
 					if(!self.animations.length) {
-						console.log('finished all animations - auto-stopping');
+						//console.log('finished all animations - auto-stopping');
 						self.stop();
 					}
 				}
