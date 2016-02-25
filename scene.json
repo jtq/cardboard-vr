@@ -15,7 +15,47 @@
 		{ "name":"Down far yellow", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFFFF00", "pos":[0,-100,0], "rot":[45,0,45] }
 	],
 	"animations": {
-		"grow": {
+		"growspin": [
+			{
+				"time": 500,
+				"prop": "scale",
+				"val": {
+					"x": 2,
+					"y": 2,
+					"z": 2
+				}
+			},
+			{
+				"time": 1000,
+				"prop": "rotation",
+				"val": {
+					"x": 1.571,
+					"y": 1.571,
+					"z": 1.571
+				}
+			}
+		],
+		"crazy": [
+			{
+				"time": 2000,
+				"prop": "scale",
+				"val": {
+					"x": 1,
+					"y": 2,
+					"z": 1
+				}
+			},
+			{
+				"time": 5000,
+				"prop": "rotation",
+				"val": {
+					"x": 3.142,
+					"y": 0.785,
+					"z": 0
+				}
+			}
+		],
+		"grow": [{
 			"time": 1000,
 			"prop": "scale",
 			"val": {
@@ -23,8 +63,8 @@
 				"y": 2,
 				"z": 2
 			}
-		},
-		"elongate": {
+		}],
+		"elongate": [{
 			"time": 1000,
 			"prop": "scale",
 			"val": {
@@ -32,8 +72,8 @@
 				"y": 1,
 				"z": 1
 			}
-		},
-		"spin": {
+		}],
+		"spin": [{
 			"time": 500,
 			"prop": "rotation",
 			"val": {
@@ -41,8 +81,8 @@
 				"y": 1.571,
 				"z": 1.571
 			}
-		},
-		"slide": {
+		}],
+		"slide": [{
 			"time": 1000,
 			"prop": "position",
 			"val": {
@@ -50,6 +90,6 @@
 				"y": 20,
 				"z": 10
 			}
-		}
+		}]
 	}
 }

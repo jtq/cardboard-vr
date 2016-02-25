@@ -4,17 +4,22 @@ var tween = {
 	running: false,
 	//progress: 0,
 
-	animate: function(object, process) {
+	animate: function(object, processes) {
 		var epochSeconds = new Date().getTime();
 		var animation = {
 			start: epochSeconds,
 			object: object,
-			process: JSON.parse(JSON.stringify(process)),	// Hacky shortcut to copy simple object
+			processes: JSON.parse(JSON.stringify(processes)),	// Hacky shortcut to copy simple object
 		};
-		animation.process.origValue = {};
-		Object.keys(process.val).forEach(function(key) {
-			animation.process.origValue[key] = object[process.prop][key];
+
+		animation.processes.forEach(function(process) {
+			process.origValue = {};
+
+			Object.keys(process.val).forEach(function(key) {
+				process.origValue[key] = object[process.prop][key];
+			});
 		});
+		
 		this.animations.push(animation);
 		console.log(animation);
 	},
@@ -30,28 +35,44 @@ var tween = {
 
 			//console.log(anim.start, currentTime);
 
-			Object.keys(anim.process.val).forEach(function(key) {
-				var fraction = (currentTime - anim.start) / anim.process.time;
-				var originalValue = anim.process.origValue[key];
-				var targetValue = anim.process.val[key];
-				var currentValue = ((targetValue - originalValue) * fraction) + originalValue;
+			anim.processes.forEach(function(process, processIndex) {
 
-				console.log(key, originalValue + '->' + targetValue, self.progress, fraction, '=', currentValue);
-				if(fraction < 1) {
-					anim.object[anim.process.prop][key] = currentValue;
-					//console.log("incremented anim", animIndex, anim.object.name, anim.process.prop, anim.process.val);
+				var fraction = (currentTime - anim.start) / process.time;
+
+				Object.keys(process.val).forEach(function(key) {
+					var originalValue = process.origValue[key];
+					var targetValue = process.val[key];
+					var currentValue = ((targetValue - originalValue) * fraction) + originalValue;
+
+					//console.log(key, originalValue + '->' + targetValue, self.progress, fraction, '=', currentValue);
+
+					if(fraction < 1) {	// If process is ongoing, set to new value
+						anim.object[process.prop][key] = currentValue;
+					}
+					else {	// If process has ended, explicitly set to target value (to avoid rounding errors)
+						anim.object[process.prop][key] = process.val[key];
+					}
+				});
+
+				// Now check whether the process, animation or all animations have finished, and if so drop them from consideration
+
+				if(fraction < 1) {	// If process is ongoing, set to new value
+					console.log("incremented process", (fraction*100).toFixed(2)+"%", anim.object.name, process.prop, process.val);
 				}
-				else {
-					anim.object[anim.process.prop][key] = anim.process.val[key];
-					self.animations.splice(animIndex,1);
-					//console.log("removed anim", animIndex, anim.object.name, anim.process.prop, anim.process.val);
+				else {	// If process has ended, drop the process from the animation
+					anim.processes.splice(processIndex, 1);
+					console.log("removed process", anim.object.name, process.prop, process.val, anim.processes);
 
-					if(!self.animations.length) {
-						//console.log('finished all animations - auto-stopping');
-						self.stop();
+					if(!anim.processes.length) {	// If no more processes in the animation, drop the animation altogether
+						self.animations.splice(animIndex,1);
+						console.log("removed anim", anim.object.name, self.animations);
+
+						if(!self.animations.length) {
+							console.log('finished all animations - auto-stopping');
+							self.stop();
+						}
 					}
 				}
-				
 			});
 		});
 
