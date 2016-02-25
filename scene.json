@@ -23,6 +23,33 @@
 				"y": 2,
 				"z": 2
 			}
+		},
+		"elongate": {
+			"time": 1000,
+			"prop": "scale",
+			"val": {
+				"x": 2,
+				"y": 1,
+				"z": 1
+			}
+		},
+		"spin": {
+			"time": 500,
+			"prop": "rotation",
+			"val": {
+				"x": 1.571,
+				"y": 1.571,
+				"z": 1.571
+			}
+		},
+		"slide": {
+			"time": 1000,
+			"prop": "position",
+			"val": {
+				"x": 50,
+				"y": 20,
+				"z": 10
+			}
 		}
 	}
 }

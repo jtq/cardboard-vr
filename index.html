@@ -106,47 +106,13 @@
 				scene.add( pointLight );
 
 				// User interface
-				var ui = document.createElement('div');
-				ui.id = "ui";
-				document.body.appendChild(ui);
+				setUpUI();
 
-				ui.addEventListener('mousedown', interact);
-
-				function interact() {
-					//alert("Touchstart!");
-					var raycaster = new THREE.Raycaster();
-					raycaster.setFromCamera(new THREE.Vector2(0,0), camera );
-					var intersects = raycaster.intersectObjects( objects );
-
-					if ( intersects.length > 0 ) {
-
-						var intersect = intersects[ 0 ];
-
-						var object = intersect.object;
-
-						speechSynthesis.speak(new SpeechSynthesisUtterance(object.name));
-
-						tween.animate(object, animations.grow);
-						tween.start();
-					}
-
-				}
-
-				var reticleL = document.createElement("div");
-				reticleL.className = "reticle reticle-left";
-				document.body.appendChild(reticleL);
-
-				var reticleR = document.createElement("div");
-				reticleR.className = "reticle reticle-right";
-				document.body.appendChild(reticleR);
-
-
-	renderer.setClearColor( 0xdddddd, 1);
-	render();
+				renderer.setClearColor( 0xdddddd, 1);
+				render();
+				animate();
 
 				window.addEventListener( 'resize', onWindowResize, false );
-
-				animate();
 			}
 
 			function deg2rad(deg) {
@@ -170,6 +136,46 @@
 
 			function render() {
 				effect.render( scene, camera );
+			}
+
+			function setUpUI() {
+
+				var ui = document.createElement('div');
+				ui.id = "ui";
+				document.body.appendChild(ui);
+
+				ui.addEventListener('mousedown', interact);
+
+				var reticleL = document.createElement("div");
+				reticleL.className = "reticle reticle-left";
+				document.body.appendChild(reticleL);
+
+				var reticleR = document.createElement("div");
+				reticleR.className = "reticle reticle-right";
+				document.body.appendChild(reticleR);
+			}
+
+			function interact() {
+				// Project ray from camera into scene and find closest object (if any) it intersects with
+				var raycaster = new THREE.Raycaster();
+				raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+
+				var intersects = raycaster.intersectObjects(objects);
+
+				if(intersects.length > 0) {
+					var intersect = intersects[0];
+					var object = intersect.object;
+					activate(object);
+				}
+			}
+
+			function activate(object) {
+				if(speechSynthesis && speechSynthesis.speak) {
+					speechSynthesis.speak(new SpeechSynthesisUtterance(object.name));
+				}
+
+				tween.animate(object, animations.spin);
+				tween.start();
 			}
 
 		</script>
