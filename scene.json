@@ -18,9 +18,15 @@
 			{ "time": 500,	"prop": "scale",	"val": { "x": 2, "y": 2, "z": 2 } },
 			{ "time": 1000, "prop": "rotation", "val": { "x": 1.571, "y": 1.571, "z": 1.571 } }
 		],
-		"crazy": [
-			{ "time": 2000, "prop": "scale", 	"val": { "x": 1, "y": 2, "z": 1 } },
-			{ "time": 5000, "prop": "rotation",	"val": { "x": 3.142, "y": 0.785, "z": 0 } }
+		"complex": [
+			{ 				"time": 0,		"prop": "material", "val": { "transparent": true } },
+			{ 				"time": 1000, 	"prop": "material", "val": { "opacity": 0.25 } },
+			{ "delay":1000,	"time": 1000,	"prop": "material", "val": { "opacity": 1 } },
+			{ "delay":2000,	"time": 0,		"prop": "material", "val": { "transparent": false } },
+			{ 				"time": 2000, 	"prop": "scale", 	"val": { "x": 1, "y": 2, "z": 1 } },
+			{ 				"time": 2000,	"prop": "rotation",	"val": { "x": 3.142, "y": 0.785, "z": 0 } },
+			{ "delay":2000,	"time": 1000,	"prop": "rotation",	"val": { "x": 0, "y": 0.785, "z": 0 } },
+			{ "delay":2000,	"time": 1000,	"prop": "scale", 	"val": { "x": 1, "y": 1, "z": 1 } }
 		],
 		"grow": [{ "time": 1000, "prop": "scale", "val": { "x": 2, "y": 2, "z": 2 } }],
 		"elongate": [{ "time": 1000, "prop": "scale", "val": { "x": 2, "y": 1, "z": 1 } }],
