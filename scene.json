@@ -14,7 +14,7 @@
 		{ "name":"Down near yellow", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFFFF00", "pos":[0,-20,0], "rot":[45,0,45] }
 	],
 	"animations": {
-		"growspin": [
+		"growSpin": [
 			{ "time": 500,	"prop": "scale",	"val": { "x": 2, "y": 2, "z": 2 } },
 			{ "time": 1000, "prop": "rotation", "val": { "x": 1.571, "y": 1.571, "z": 1.571 } }
 		],
@@ -29,6 +29,16 @@
 		"fadeOut": [
 			{ "time": 0,	"prop": "material", "val": { "transparent": true } },
 			{ "time": 1000, "prop": "material", "val": { "opacity": 0 } }
+		],
+		"fadeIn": [
+			{ "time": 1000, "prop": "material", "val": { "opacity": 1 } },
+			{ "time": 0,	"delay": 1000, "prop": "material", "val": { "transparent": false } }
+		],
+		"fadeOutIn": [
+			{ "time": 0,					"prop": "material", "val": { "transparent": true } },
+			{ "time": 1000, 				"prop": "material", "val": { "opacity": 0 } },
+			{ "time": 1000, "delay":1000,	"prop": "material", "val": { "opacity": 1 } },
+			{ "time": 0,  	"delay":2000,	"prop": "material", "val": { "transparent": false } }
 		]
 	}
 }
