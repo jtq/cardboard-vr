@@ -21,7 +21,7 @@ var tween = {
 		});
 		
 		this.animations.push(animation);
-		console.log(animation);
+		//console.log(animation);
 	},
 
 	render: function() {
@@ -57,18 +57,18 @@ var tween = {
 				// Now check whether the process, animation or all animations have finished, and if so drop them from consideration
 
 				if(fraction < 1) {	// If process is ongoing, set to new value
-					console.log("incremented process", (fraction*100).toFixed(2)+"%", anim.object.name, process.prop, process.val);
+					//console.log("incremented process", (fraction*100).toFixed(2)+"%", anim.object.name, process.prop, process.val);
 				}
 				else {	// If process has ended, drop the process from the animation
 					anim.processes.splice(processIndex, 1);
-					console.log("removed process", anim.object.name, process.prop, process.val, anim.processes);
+					//console.log("removed process", anim.object.name, process.prop, process.val, anim.processes);
 
 					if(!anim.processes.length) {	// If no more processes in the animation, drop the animation altogether
 						self.animations.splice(animIndex,1);
-						console.log("removed anim", anim.object.name, self.animations);
+						//console.log("removed anim", anim.object.name, self.animations);
 
 						if(!self.animations.length) {
-							console.log('finished all animations - auto-stopping');
+							//console.log('finished all animations - auto-stopping');
 							self.stop();
 						}
 					}
