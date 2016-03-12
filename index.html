@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<script src="lib/three.min.js"></script>
 		<script src="lib/Detector.js"></script>
 		<script src="lib/StereoEffect.js"></script>
@@ -10,6 +11,7 @@
 		<style type="text/css">
 			body {
 				margin: 0;
+				background-image: linear-gradient(90deg, #dddddd 49%, #ff0000 50%, #dddddd 51%);
 			}
 			#container {
 				padding-bottom: 100px;
@@ -80,7 +82,7 @@
 
 				scene = new THREE.Scene();
 
-				renderer = new THREE.WebGLRenderer();
+				renderer = new THREE.WebGLRenderer({ alpha: true });
 				renderer.setPixelRatio( window.devicePixelRatio );
 				container.appendChild( renderer.domElement );
 
@@ -108,7 +110,7 @@
 				// User interface
 				setUpUI();
 
-				renderer.setClearColor( 0xdddddd, 1);
+				renderer.setClearColor( 0xffffff, 0);
 				render();
 				animate();
 
