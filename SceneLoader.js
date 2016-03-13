@@ -17,38 +17,85 @@ var sceneLoader = {
 		var meshes = [];
 
 		objData.forEach(function(obj) {
+			var dim = obj.dim instanceof Array ? obj.dim : [];
 			var pos = obj.pos instanceof Array ? obj.pos : [0,0,0];
 			var rot = obj.rot instanceof Array ? obj.rot : [0,0,0];
-			var geo = obj.geo || "Object3D";
+			var geo = obj.geo || "ManipulableGroup";
+			var col = Number(obj.col) || 0xc0c0c0;
 
-			// Now we need to dynamically call THREE[obj.geo] as a constructor, while also passing in a dynamic array of parameters.
+			// Now we need to dynamically call THREE[geo] as a constructor, while also passing in a dynamic array of parameters.
 			// However the "new" operator and Function.apply() don't play nicely together, so first we need to produce a standaone constructor
 			// function with "this" and the parameters already bound to it (for use with the "new" operator).  The fact we need to pass in an
 			// arbitrary array of parameters means we even need to call Function.bind() dynamically though - in this case using Function.apply()
 			// So then, we end up calling object.bind.apply(this, [this, otherargs...])
-			var objType = THREE[obj.geo];
-			var constructorArgs = [].concat(objType, obj.dim.slice() || []);
+			var objType = THREE[geo];
+			var constructorArgs = [].concat(objType, dim.slice() || []);
 			var objConstructor = objType.bind.apply(objType, constructorArgs);
 			var geometry = new objConstructor();
+			var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color:col }));
 
-			if(geo !== "Object3D") {
-				geometry = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color:Number(obj.col) }));
+			if(geo === "ManipulableGroup") {
+				mesh.material.visible = false;
+
+				mesh.material.__opacity = mesh.material.opacity;
+				delete mesh.material.opacity;
+
+				function setOpacityRecursive(op) {
+
+					if(op < 1) {
+						this.material.transparent = true;
+					}
+					else {
+						this.material.transparent = false;
+					}
+					this.material.opacity = op;
+
+					this.children.forEach(function(child) {
+						setOpacityRecursive.call(child, op);
+					});
+				};
+
+				Object.defineProperty(mesh.material, "opacity", {
+					get: function () {
+						//console.log(mesh.name, "get", this.__opacity);
+						return this.__opacity;
+					},
+					set: function (op) {
+						this.__opacity = op;
+						//console.log(mesh.name, "set", this.__opacity);
+						mesh.children.forEach(function(child) {	// Recursively set all child mesh material transparencies, too
+							setOpacityRecursive.call(child, op);
+						});
+					}
+				});
 			}
+
 
 			if(obj.children) {
 				var kids = this.inflate(obj.children);
 				kids.forEach(function(child) {
-		    		geometry.add(child);
+		    		mesh.add(child);
 		    	});
 			}
 			
-			geometry.position.set(pos[0], pos[1], pos[2]);
-			geometry.rotation.set(deg2rad(rot[0]), deg2rad(rot[1]), deg2rad(rot[2]));
-			geometry.name = obj.name;
-			meshes.push(geometry);
+			mesh.position.set(pos[0], pos[1], pos[2]);
+			mesh.rotation.set(deg2rad(rot[0]), deg2rad(rot[1]), deg2rad(rot[2]));
+			mesh.name = obj.name;
+
+			mesh.selectable = true;
+
+			meshes.push(mesh);
 		}.bind(this));
 
 		return meshes;
 	}
 
 };
+
+THREE.ManipulableGroup = function() {
+	THREE.BoxGeometry.call( this );
+	this.type = 'ManipulableGroup';
+
+};
+THREE.ManipulableGroup.prototype = Object.create( THREE.BoxGeometry.prototype );
+THREE.ManipulableGroup.prototype.constructor = THREE.ManipulableGroup;

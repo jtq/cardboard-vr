@@ -3,7 +3,8 @@
 		{ "name":"North near blue", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x0000FF", "pos":[0,0,20], "rot":[0,45,0] },
 		{ "name":"East near green", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FF00", "pos":[-20,0,0], "rot":[0,45,0] },
 
-		{ "name":"South near turquoise", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FFFF", "pos":[0,0,-20], "rot":[0,45,0], "children": [
+		{ "name":"South near turquoise", "pos":[0,0,-20], "rot":[0,45,0], "children": [
+			{ "name":"Body", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FFFF", "pos":[0,0,0], "rot":[0,0,0] },
 			{ "name":"Width", "geo":"BoxGeometry", "dim":[7,1,1], "col":"0x00FFFF", "pos":[0,0,0], "rot":[0,0,0] },
 			{ "name":"Depth", "geo":"BoxGeometry", "dim":[1,1,7], "col":"0x00FFFF", "pos":[0,0,0], "rot":[0,0,0] },
 			{ "name":"Height", "geo":"BoxGeometry", "dim":[1,7,1], "col":"0x00FFFF", "pos":[0,0,0], "rot":[0,0,0] }
