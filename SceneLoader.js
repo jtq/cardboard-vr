@@ -70,6 +70,16 @@ var sceneLoader = {
 				});
 			}
 
+			mesh.position.set(pos[0], pos[1], pos[2]);
+			mesh.rotation.set(deg2rad(rot[0]), deg2rad(rot[1]), deg2rad(rot[2]));
+			mesh.name = obj.name;
+
+			mesh.selectable = (geo !== "ManipulableGroup" || !!obj.selectable);
+
+			mesh.onActivate = null;
+			if(obj.onActivate && obj.onActivate in animations) {
+				mesh.onActivate = animations[obj.onActivate];
+			}
 
 			if(obj.children) {
 				var kids = this.inflate(obj.children);
@@ -77,12 +87,6 @@ var sceneLoader = {
 		    		mesh.add(child);
 		    	});
 			}
-			
-			mesh.position.set(pos[0], pos[1], pos[2]);
-			mesh.rotation.set(deg2rad(rot[0]), deg2rad(rot[1]), deg2rad(rot[2]));
-			mesh.name = obj.name;
-
-			mesh.selectable = true;
 
 			meshes.push(mesh);
 		}.bind(this));

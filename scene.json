@@ -1,18 +1,20 @@
 {
 	"objects": [
-		{ "name":"North near blue", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x0000FF", "pos":[0,0,20], "rot":[0,45,0] },
-		{ "name":"East near green", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FF00", "pos":[-20,0,0], "rot":[0,45,0] },
+		{ "name":"North near blue", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x0000FF", "onActivate":"spin", "pos":[0,0,40], "rot":[0,45,0] },
+		{ "name":"East near green", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FF00", "onActivate":"slide", "pos":[-40,0,0], "rot":[0,45,0] },
 
-		{ "name":"South near turquoise", "pos":[0,0,-20], "rot":[0,45,0], "children": [
-			{ "name":"Body", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FFFF", "pos":[0,0,0], "rot":[0,0,0] },
-			{ "name":"Width", "geo":"BoxGeometry", "dim":[7,1,1], "col":"0x00FFFF", "pos":[0,0,0], "rot":[0,0,0] },
-			{ "name":"Depth", "geo":"BoxGeometry", "dim":[1,1,7], "col":"0x00FFFF", "pos":[0,0,0], "rot":[0,0,0] },
-			{ "name":"Height", "geo":"BoxGeometry", "dim":[1,7,1], "col":"0x00FFFF", "pos":[0,0,0], "rot":[0,0,0] }
+		{ "pos":[0,0,-40], "rot":[0,45,0], "children": [
+			{ "name":"South near turquoise", "onActivate":"spin", "selectable":true, "children": [
+				{ "name":"Body", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FFFF", "onActivate":"fadeOutIn", "pos":[0,0,0], "rot":[0,0,0] },
+				{ "name":"Width", "geo":"BoxGeometry", "dim":[7,1,1], "col":"0x00FFFF", "onActivate":"elongate", "pos":[0,0,0], "rot":[0,0,0] },
+				{ "name":"Depth", "geo":"BoxGeometry", "dim":[7,1,1], "col":"0x00FFFF", "onActivate":"elongate", "pos":[0,0,0], "rot":[0,90,0] },
+				{ "name":"Height", "geo":"BoxGeometry", "dim":[7,1,1], "col":"0x00FFFF", "onActivate":"elongate", "pos":[0,0,0], "rot":[0,0,90] }
+			] }
 		] },
 
-		{ "name":"West near red", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFF0000", "pos":[20,0,0], "rot":[0,45,0] },
-		{ "name":"Up near mauve", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFF00FF", "pos":[0,20,0], "rot":[45,0,45] },
-		{ "name":"Down near yellow", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFFFF00", "pos":[0,-20,0], "rot":[45,0,45] }
+		{ "name":"West near red", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFF0000", "onActivate":"grow", "pos":[40,0,0], "rot":[0,45,0] },
+		{ "name":"Up near mauve", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFF00FF", "onActivate":"spin", "pos":[0,40,0], "rot":[45,0,45] },
+		{ "name":"Down near yellow", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFFFF00", "onActivate":"spin", "pos":[0,-40,0], "rot":[45,0,45] }
 	],
 	"animations": {
 		"growSpin": [
@@ -20,10 +22,8 @@
 			{ "time": 1000, "prop": "rotation", "val": { "x": 1.571, "y": 1.571, "z": 1.571 } }
 		],
 		"complex": [
-			{ 				"time": 0,		"prop": "material", "val": { "transparent": true } },
 			{ 				"time": 1000, 	"prop": "material", "val": { "opacity": 0.25 } },
 			{ "delay":1000,	"time": 1000,	"prop": "material", "val": { "opacity": 1 } },
-			{ "delay":2000,	"time": 0,		"prop": "material", "val": { "transparent": false } },
 			{ 				"time": 2000, 	"prop": "scale", 	"val": { "x": 1, "y": 2, "z": 1 } },
 			{ 				"time": 2000,	"prop": "rotation",	"val": { "x": 3.142, "y": 0.785, "z": 0 } },
 			{ "delay":2000,	"time": 1000,	"prop": "rotation",	"val": { "x": 0, "y": 0.785, "z": 0 } },
@@ -32,7 +32,7 @@
 		"grow": [{ "time": 1000, "prop": "scale", "val": { "x": 2, "y": 2, "z": 2 } }],
 		"elongate": [{ "time": 1000, "prop": "scale", "val": { "x": 2, "y": 1, "z": 1 } }],
 		"spin": [{ "time": 500, "prop": "rotation", "val": { "x": 1.571, "y": 1.571, "z": 1.571 } }],
-		"slide": [{ "time": 1000, "prop": "position", "val": { "x": 50, "y": 20, "z": 10 } }],
+		"slide": [{ "time": 10000, "prop": "position", "val": { "x": 50, "y": 20, "z": 10 } }],
 		"fadeOut": [
 			{ "time": 0,	"prop": "material", "val": { "transparent": true } },
 			{ "time": 1000, "prop": "material", "val": { "opacity": 0 } }

@@ -67,8 +67,8 @@
 			var objects = [], animations = {};
 
 			sceneLoader.load("scene.json", function (data) {
+				animations = data.animations;
 		    	objects = sceneLoader.inflate(data.objects);
-		    	animations = data.animations;
 		        init();
 			});
 
@@ -171,16 +171,23 @@
 					while(object.parent && object.parent.selectable) {	// If child element selected, activate the highest selectable ancestor container
 						object = object.parent;
 					}
+
+					if(speechSynthesis && speechSynthesis.speak) {
+						speechSynthesis.speak(new SpeechSynthesisUtterance(object.name));
+					}
 					activate(object);
 				}
 			}
 
-			function activate(object) {
-				if(speechSynthesis && speechSynthesis.speak) {
-					speechSynthesis.speak(new SpeechSynthesisUtterance(object.name));
+			function activate(obj) {
+				if(obj.onActivate) {
+					tween.animate(obj, obj.onActivate);
 				}
 
-				tween.animate(object, animations.complex);
+				obj.children.forEach(function(child) {
+					activate(child);
+				});
+				
 				tween.start();
 			}
 
