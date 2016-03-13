@@ -147,7 +147,11 @@
 				ui.id = "ui";
 				document.body.appendChild(ui);
 
-				ui.addEventListener('mousedown', interact);
+				ui.addEventListener('click', interact);
+
+				ui.addEventListener('dblclick', function() {
+					document.location.reload(true);
+				});
 
 				var reticleL = document.createElement("div");
 				reticleL.className = "reticle reticle-left";
