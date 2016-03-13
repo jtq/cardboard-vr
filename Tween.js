@@ -34,7 +34,7 @@ var tween = {
 
 				if(timeSinceStart > process.delay) {
 
-					// If this is the first step of this animation, capture the original value at this point (before we modify it, but after any earlier processes have modified it)
+					// If this is the first step of this process, capture the original value at this point (before we modify it, but after any earlier processes have modified it)
 					if(!process.origValue) {
 						process.origValue = {};
 
@@ -42,7 +42,6 @@ var tween = {
 							process.origValue[key] = anim.object[process.prop][key];
 						});
 					}
-
 
 					var timeintoAnim = timeSinceStart - process.delay;
 
