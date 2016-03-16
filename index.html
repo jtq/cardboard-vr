@@ -80,6 +80,7 @@
 
 				// Set up camera, scene, renderer, etc
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 100000 );
+				camera.position.set(0, 10, 0);
 
 				scene = new THREE.Scene();
 
@@ -139,6 +140,7 @@
 
 			function render() {
 				effect.render( scene, camera );
+				//renderer.render(scene, camera);	// Disable stereoscopic effect
 			}
 
 			function setUpUI() {
@@ -176,9 +178,9 @@
 						object = object.parent;
 					}
 
-					if(speechSynthesis && speechSynthesis.speak) {
+					/*if(speechSynthesis && speechSynthesis.speak) {
 						speechSynthesis.speak(new SpeechSynthesisUtterance(object.name));
-					}
+					}*/
 					activate(object);
 				}
 			}
