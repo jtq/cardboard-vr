@@ -87,7 +87,7 @@ var sceneLoader = {
 			}
 
 			if(obj.children) {
-				var kids = this.inflate(obj.children);
+				var kids = this.inflate(obj.children, prefabs);
 				kids.forEach(function(child) {
 		    		mesh.add(child);
 		    	});
