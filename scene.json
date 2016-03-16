@@ -1,60 +1,41 @@
 {
 	"objects": [
-		{ "name":"North near blue", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x0000FF", "onActivate":"spin", "pos":[0,0,40], "rot":[0,45,0] },
-		{ "name":"East near green", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FF00", "onActivate":"slide", "pos":[-40,0,0], "rot":[0,45,0] },
-
-		{ "pos":[0,0,-40], "rot":[0,45,0], "children": [
-			{ "name":"South near turquoise", "onActivate":"spin", "selectable":true, "children": [
-				{ "name":"Body", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FFFF", "onActivate":"fadeOutIn", "pos":[0,0,0], "rot":[0,0,0] },
-				{ "name":"Width", "geo":"BoxGeometry", "dim":[7,1,1], "col":"0x00FFFF", "onActivate":"elongate", "pos":[0,0,0], "rot":[0,0,0] },
-				{ "name":"Depth", "geo":"BoxGeometry", "dim":[7,1,1], "col":"0x00FFFF", "onActivate":"elongate", "pos":[0,0,0], "rot":[0,90,0] },
-				{ "name":"Height", "geo":"BoxGeometry", "dim":[7,1,1], "col":"0x00FFFF", "onActivate":"elongate", "pos":[0,0,0], "rot":[0,0,90] }
-			] }
+		{ "name":"room", "children":[
+			{ "name":"floor", "geo":"BoxGeometry", "dim":[50,1,100], "col":"0xc08000", "pos":[0,-0.5,0], "rot":[0,0,0] },
+			{ "name":"wall1", "geo":"BoxGeometry", "dim":[50,20,1], "col":"0xc08000", "pos":[0,10,49.5], "rot":[0,0,0] },
+			{ "name":"wall2", "geo":"BoxGeometry", "dim":[50,20,1], "col":"0xc08000", "pos":[0,10,-49.5], "rot":[0,0,0] },
+			{ "name":"wall3", "geo":"BoxGeometry", "dim":[1,20,100], "col":"0xc08000", "pos":[24.5,10,0], "rot":[0,0,0] },
+			{ "name":"wall3", "geo":"BoxGeometry", "dim":[1,20,100], "col":"0xc08000", "pos":[-24.5,10,0], "rot":[0,0,0], "children":[
+				{ "name":"shelf", "geo":"BoxGeometry", "dim":[4.5,0.5,15], "col":"0xd04000", "pos":[3.25,0,0], "rot":[2,0,0] }
+			] },
+			{ "name":"ceiling", "geo":"BoxGeometry", "dim":[50,1,100], "col":"0xc08000", "pos":[0,19.5,0], "rot":[0,0,0] }
 		] },
 
-		{ "name":"West near red", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFF0000", "onActivate":"grow", "pos":[40,0,0], "rot":[0,45,0] },
-		{ "name":"Up near mauve", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFF00FF", "onActivate":"spin", "pos":[0,40,0], "rot":[45,0,45] },
-		{ "name":"Down near yellow", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0xFFFF00", "onActivate":"spin", "pos":[0,-40,0], "rot":[45,0,45] },
+		{ "name":"Chest", "prefab":"chest", "pos":[15,0,-35], "rot":[0,10,0] },
+		{ "name":"Chest", "prefab":"chest", "pos":[20,0,-30], "rot":[0,-90,0] },
 
-		{ "pos":[-5,-10,-3], "rot":[0,25,0], "children": [
-			{ "name":"chest", "selectable":true, "children": [
+		{ "name":"Chest", "prefab":"chest", "pos":[10,0,-5], "rot":[0,-105,0] },
 
-				{ "name":"body", "selectable":true, "children": [
+		{ "pos":[10,0,20], "rot":[0,0,0], "children":[
+			{"rot":[0,-120,0], "children":[
+				{ "name":"Chest", "prefab":"chest", "pos":[0,0.2,-1.5], "rot":[-10,0,0] }
+			]},
+			{ "name":"Books", "prefab":"pileobooks", "rot":[0,10,0] }
+		] },
 
-					{ "name":"body-left", "geo":"BoxGeometry", "dim":[0.5,3,3], "col":"0xe0e000", "pos":[-1.75,1.5,0], "rot":[0,0,0] },
-					{ "name":"body-right", "geo":"BoxGeometry", "dim":[0.5,3,3], "col":"0xe0e000", "pos":[1.75,1.5,0], "rot":[0,0,0] },
-					
-					{ "name":"body-back", "geo":"BoxGeometry", "dim":[3,3,0.5], "col":"0xc0c000", "pos":[0,1.5,-1.25], "rot":[0,0,0] },
-					{ "name":"body-front", "geo":"BoxGeometry", "dim":[3,3,0.5], "col":"0xc0c000", "pos":[0,1.5,1.25], "rot":[0,0,0] },
 
-					{ "name":"body-bottom", "geo":"BoxGeometry", "dim":[3,0.5,2], "col":"0xa0a000", "pos":[0,0.25,0], "rot":[0,0,0] }
-				] },
+		{ "name":"Chest", "prefab":"chest", "pos":[3,0,30], "rot":[0,56,0] },
 
-				{ "name":"lid", "selectable":true, "pos":[0,3.01,0], "children": [
+		{ "name":"Chest", "prefab":"chest", "pos":[-20,0,28], "rot":[0,165,0] },
 
-					{ "selectable":true, "pos":[0,0,-1.5], "children": [
 
-						{ "selectable":true, "onActivate":"open", "children":[
+		{ "pos":[-20.5,10.1,4.5], "rot":[2,0,0], "children":[
+			{ "name":"Chest", "prefab":"chest", "rot":[0,90,0] }
+		] },
 
-							{ "selectable":true, "pos":[0,0,1.5], "children": [
+		{ "name":"Chest", "prefab":"chest", "pos":[-8,0,-10], "rot":[0,40,0] },
 
-								{ "name":"lid-left", "geo":"BoxGeometry", "dim":[0.5,1,3], "col":"0xe0e000", "pos":[-1.75,0.5,0], "rot":[0,0,0] },
-								{ "name":"lid-right", "geo":"BoxGeometry", "dim":[0.5,1,3], "col":"0xe0e000", "pos":[1.75,0.5,0], "rot":[0,0,0] },
-								
-								{ "name":"lid-back", "geo":"BoxGeometry", "dim":[3,1,0.5], "col":"0xc0c000", "pos":[0,0.5,-1.25], "rot":[0,0,0] },
-								{ "name":"lid-front", "geo":"BoxGeometry", "dim":[3,1,0.5], "col":"0xc0c000", "pos":[0,0.5,1.25], "rot":[0,0,0] },
-
-								{ "name":"lid-top", "geo":"BoxGeometry", "dim":[3,0.5,2], "col":"0xa0a000", "pos":[0,0.75,0], "rot":[0,0,0] }
-							] }
-						] }
-					] }
-				] },
-
-				{ "name":"symbol", "selectable":true, "onActivate":"risespin", "pos":[0,1.5,0], "children": [
-					{ "geo":"OctahedronGeometry", "dim":[1,0], "col":"0x00ffff", "rot":[0,30,0] }
-				] }
-			] }
-		] }
+		{ "name":"Chest", "prefab":"chest", "pos":[-20,0,-45], "rot":[0,45,0] }
 	],
 	"animations": {
 		"open": [
@@ -107,5 +88,64 @@
 			{ "time": 1000, "delay":1000,	"prop": "material", "val": { "opacity": 1 } },
 			{ "time": 0,  	"delay":2000,	"prop": "material", "val": { "transparent": false } }
 		]
+	},
+	"prefabs": {
+		"chest": { "selectable":true, "children": [
+
+			{ "name":"body", "selectable":true, "children": [
+
+				{ "name":"body-left", "geo":"BoxGeometry", "dim":[0.5,3,3], "col":"0xe0e000", "pos":[-1.75,1.5,0], "rot":[0,0,0] },
+				{ "name":"body-right", "geo":"BoxGeometry", "dim":[0.5,3,3], "col":"0xe0e000", "pos":[1.75,1.5,0], "rot":[0,0,0] },
+				
+				{ "name":"body-back", "geo":"BoxGeometry", "dim":[3,3,0.5], "col":"0xc0c000", "pos":[0,1.5,-1.25], "rot":[0,0,0] },
+				{ "name":"body-front", "geo":"BoxGeometry", "dim":[3,3,0.5], "col":"0xc0c000", "pos":[0,1.5,1.25], "rot":[0,0,0] },
+
+				{ "name":"body-bottom", "geo":"BoxGeometry", "dim":[3,0.5,2], "col":"0xa0a000", "pos":[0,0.25,0], "rot":[0,0,0] }
+			] },
+
+			{ "name":"lid", "selectable":true, "pos":[0,3.01,0], "children": [
+
+				{ "selectable":true, "pos":[0,0,-1.5], "children": [
+
+					{ "selectable":true, "onActivate":"open", "children":[
+
+						{ "selectable":true, "pos":[0,0,1.5], "children": [
+
+							{ "name":"lid-left", "geo":"BoxGeometry", "dim":[0.5,1,3], "col":"0xe0e000", "pos":[-1.75,0.5,0], "rot":[0,0,0] },
+							{ "name":"lid-right", "geo":"BoxGeometry", "dim":[0.5,1,3], "col":"0xe0e000", "pos":[1.75,0.5,0], "rot":[0,0,0] },
+							
+							{ "name":"lid-back", "geo":"BoxGeometry", "dim":[3,1,0.5], "col":"0xc0c000", "pos":[0,0.5,-1.25], "rot":[0,0,0] },
+							{ "name":"lid-front", "geo":"BoxGeometry", "dim":[3,1,0.5], "col":"0xc0c000", "pos":[0,0.5,1.25], "rot":[0,0,0] },
+
+							{ "name":"lid-top", "geo":"BoxGeometry", "dim":[3,0.5,2], "col":"0xa0a000", "pos":[0,0.75,0], "rot":[0,0,0] }
+						] }
+					] }
+				] }
+			] },
+
+			{ "name":"symbol", "selectable":true, "onActivate":"risespin", "pos":[0,1.5,0], "children": [
+				{ "geo":"OctahedronGeometry", "dim":[1,0], "col":"0x00ffff", "rot":[0,30,0] }
+			] }
+		] },
+		"bookclosed": { "selectable":true, "children": [
+			{ "name":"pages", "geo":"BoxGeometry", "dim":[1.4,0.25,0.65], "col":"0xf8f8f8" },
+			{ "name":"frontcover", "geo":"BoxGeometry", "dim":[1.5,0.1,0.75], "pos":[0,0.175,0], "col":"0x8A2E0C" },
+			{ "name":"backcover", "geo":"BoxGeometry", "dim":[1.5,0.1,0.75], "pos":[0,-0.175,0], "col":"0x8A2E0C" },
+			{ "name":"spine", "geo":"BoxGeometry", "dim":[1.5,0.45,0.1], "pos":[0,0,0.375], "col":"0x8A2E0C" }
+		]},
+		"bookopen": { "selectable":true, "children": [
+			{ "name":"pagesleft", "geo":"BoxGeometry", "dim":[1.4,0.125,0.65], "pos":[0,0.0735,-0.33], "rot":[-5,0,0], "col":"0xf8f8f8" },
+			{ "name":"pagesright", "geo":"BoxGeometry", "dim":[1.4,0.125,0.65], "pos":[0,0.0735,0.33], "rot":[5,0,0], "col":"0xf8f8f8" },
+
+			{ "name":"frontcover", "geo":"BoxGeometry", "dim":[1.5,0.1,0.75], "pos":[0,0.05,-0.375], "rot":[-5,0,0], "col":"0x8A2E0C" },
+			{ "name":"backcover", "geo":"BoxGeometry", "dim":[1.5,0.1,0.75], "pos":[0,0.05,0.375], "rot":[5,0,0], "col":"0x8A2E0C" },
+			{ "name":"spine", "geo":"BoxGeometry", "dim":[1.5,0.05,0.3], "pos":[0,0,0], "col":"0x8A2E0C" }
+
+		]},
+		"pileobooks": { "selectable":true, "children": [
+			{ "name":"Book", "prefab":"bookclosed", "pos":[0,0.225,0], "rot":[0,40,0] },
+			{ "name":"Book", "prefab":"bookclosed", "pos":[-1,0.5,-0.25], "rot":[0,0,20] },
+			{ "name":"Book", "prefab":"bookopen", "pos":[-1,0.225,-1.75], "rot":[0,80,0] }
+		] }
 	}
 }
