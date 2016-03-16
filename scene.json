@@ -1,5 +1,6 @@
 {
 	"objects": [
+		{ "name":"Box from prefab", "prefab":"Box" },
 		{ "name":"North near blue", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x0000FF", "onActivate":"spin", "pos":[0,0,40], "rot":[0,45,0] },
 		{ "name":"East near green", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x00FF00", "onActivate":"slide", "pos":[-40,0,0], "rot":[0,45,0] },
 
@@ -107,5 +108,8 @@
 			{ "time": 1000, "delay":1000,	"prop": "material", "val": { "opacity": 1 } },
 			{ "time": 0,  	"delay":2000,	"prop": "material", "val": { "transparent": false } }
 		]
+	},
+	"prefabs": {
+		"Box": { "name":"Box prefab", "geo":"BoxGeometry", "dim":[5,5,5], "col":"0x0000FF", "onActivate":"spin", "pos":[0,10,-30], "rot":[0,45,0] }
 	}
 }

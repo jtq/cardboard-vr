@@ -68,7 +68,7 @@
 
 			sceneLoader.load("scene.json", function (data) {
 				animations = data.animations;
-		    	objects = sceneLoader.inflate(data.objects);
+		    	objects = sceneLoader.inflate(data.objects, data.prefabs);
 		        init();
 			});
 

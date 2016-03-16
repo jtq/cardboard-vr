@@ -12,11 +12,16 @@ var sceneLoader = {
 		request.send();
 	},
 
-	inflate: function(objData) {
+	inflate: function(objData, prefabs) {
 
 		var meshes = [];
 
 		objData.forEach(function(obj) {
+
+			if(obj.prefab && prefabs[obj.prefab]) {
+				obj = this.merge(prefabs[obj.prefab], obj);	// Turn obj into the prefab, then merge any fields defined in obj back over the top
+			}
+
 			var dim = obj.dim instanceof Array ? obj.dim : [];
 			var pos = obj.pos instanceof Array ? obj.pos : [0,0,0];
 			var rot = obj.rot instanceof Array ? obj.rot : [0,0,0];
@@ -92,6 +97,20 @@ var sceneLoader = {
 		}.bind(this));
 
 		return meshes;
+	},
+
+	merge: function(orig, from) {
+		var to = JSON.parse(JSON.stringify(orig));	// Hacky but effective deep-copy of simple objects
+		Object.keys(from).forEach(function(key) {
+			if(from[key] instanceof Object && to[key] instanceof Object) {	// obj <- obj => merge objects
+				to[key] = this.merge(to[key], from[key]);
+			}
+			else {								// overwrite to with from
+				to[key] = JSON.parse(JSON.stringify(from[key]));	
+			}
+		}.bind(this));
+
+		return to;
 	}
 
 };
