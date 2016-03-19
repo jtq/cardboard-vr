@@ -93,12 +93,25 @@
 			}
 			var gameMode = gameModes.WAIT;
 
+			var symbols = ["diamond", "cylinder", "cone", "icosahedron", "sphere", "ring", "simpleknot", "complexknot"];
+			var symbolPlurals = {
+				diamond: "diamonds",
+				cylinder: "cylinders",
+				cone: "cones",
+				icosahedron: "icosahedra",
+				sphere: "spheres",
+				ring:"rings",
+				simpleknot:"simple knots",
+				complexknot: "complex knots"
+			};
+			var uncoveredSymbols = {};
+
 			sceneLoader.load("scene.json", function (data) {
 				animations = data.animations;
 
 				// Inject different symbols into chests
 				var built = sceneLoader.build(data.objects, data.prefabs);
-				var symbols = ["diamond", "cylinder", "cone", "icosahedron", "sphere", "ring", "simpleknot", "complexknot"];
+
 				var winningIndex = Math.floor(Math.random()*symbols.length);
 				var winningSymbol = symbols.splice(winningIndex, 1)[0];
 
@@ -234,7 +247,7 @@
 				var messageUiElements = ui.add("message", messagePrototype);
 
 				setTimeout(function() {
-					ui.setHTML("message", "<strong>Welcome to the VR IWG prototype demo</strong><br /><br /><span style='font-weight: small;'>Press button to continue...</span>");
+					ui.setHTML("message", "<br /><strong>Welcome to the VR IWG prototype demo</strong><br /><br /><span style='font-weight: small;'>Press button to continue...</span>");
 					ui.fadeIn("message", "1s");
 					gameMode = gameModes.INTRO;
 				}, 1000);
@@ -273,7 +286,7 @@
 					gameMode = gameModes.PLAYING;
 					ui.fadeOut("message", "1s");
 				}
-				else if(gameMode === gameModes.PLAYING) {
+				else if(gameMode === gameModes.PLAYING || gameMode === gameModes.FINISHED) {
 					// Project ray from camera into scene and find closest object (if any) it intersects with
 					var raycaster = new THREE.Raycaster();
 					raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
@@ -287,10 +300,38 @@
 							object = object.parent;
 						}
 
-						/*if(speechSynthesis && speechSynthesis.speak) {
-							speechSynthesis.speak(new SpeechSynthesisUtterance(object.name));
-						}*/
-						activate(object);
+						activate(object);	// Let players in a finished game activate left-over objects if they like, for novelty value
+
+						if(gameMode === gameModes.PLAYING) {
+
+							var symbolWrapper = object.getObjectByName("symbol");
+
+							if(symbolWrapper) {
+
+								var selectedSymbol = symbolWrapper.children[0].name;
+
+								uncoveredSymbols[selectedSymbol] = uncoveredSymbols[selectedSymbol] ? uncoveredSymbols[selectedSymbol]+1 : 1;
+
+								if(uncoveredSymbols[selectedSymbol] === 3) {
+									if(speechSynthesis && speechSynthesis.speak) {
+										//speechSynthesis.speak(new SpeechSynthesisUtterance("Congratulations!  You found three of the "+selectedSymbol));
+									}
+
+									gameMode = gameModes.FINISHED;
+									ui.setHTML("message", "<br />Congratulations!  You found three "+symbolPlurals[selectedSymbol]+"!");
+									ui.fadeIn("message", "1s");
+
+									setTimeout(function() {
+										ui.fadeOut("message", "1s");
+										setTimeout(function() {
+											ui.setHTML("message", "<br /><br />You've finished the game!<br /><br />Reload the page to play again");
+											ui.fadeIn("message", "1s");
+										}, 1000);
+									}, 3000);
+								
+								}
+							}
+						}
 					}
 				}
 			}
