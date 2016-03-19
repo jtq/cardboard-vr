@@ -81,7 +81,7 @@
 
 			var ambientLight, pointLight;
 
-			var objects = [], animations = {};
+			var objects = [], animations = {}, prefabs = {};
 
 			var gameModes = {
 				WAIT: 0,
@@ -93,7 +93,7 @@
 			}
 			var gameMode = gameModes.WAIT;
 
-			var symbols = ["diamond", "cylinder", "cone", "icosahedron", "sphere", "ring", "simpleknot", "complexknot"];
+			var symbols = ["diamond", "cylinder", "cone", "icosahedron", "sphere", "ring", "loop", "pretzel"];
 			var symbolPlurals = {
 				diamond: "diamonds",
 				cylinder: "cylinders",
@@ -101,16 +101,19 @@
 				icosahedron: "icosahedra",
 				sphere: "spheres",
 				ring:"rings",
-				simpleknot:"simple knots",
-				complexknot: "complex knots"
+				loop:"loops",
+				pretzel: "pretzels"
 			};
 			var uncoveredSymbols = {};
 
+			var winningSymbolsDisplay = null;
+
 			sceneLoader.load("scene.json", function (data) {
 				animations = data.animations;
+				prefabs = data.prefabs;
 
 				// Inject different symbols into chests
-				var built = sceneLoader.build(data.objects, data.prefabs);
+				var built = sceneLoader.build(data.objects, prefabs);
 
 				var winningIndex = Math.floor(Math.random()*symbols.length);
 				var winningSymbol = symbols.splice(winningIndex, 1)[0];
@@ -150,7 +153,7 @@
 					chest.children[2].children[0] = sceneLoader.merge({}, data.prefabs[symbol]);
 				});
 		    	
-		    	objects = sceneLoader.inflate(built, data.prefabs);
+		    	objects = sceneLoader.inflate(built, prefabs);
 		        init();
 			});
 
@@ -160,11 +163,13 @@
 				container.id = "container";
 				document.body.appendChild( container );
 
+				scene = new THREE.Scene();
+
 				// Set up camera, scene, renderer, etc
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 100000 );
 				camera.position.set(0, 10, 0);
 
-				scene = new THREE.Scene();
+				scene.add(camera);	// winningSymbols object is added to camera, so camera must be added to scene
 
 				renderer = new THREE.WebGLRenderer({ alpha: true });
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -313,22 +318,10 @@
 								uncoveredSymbols[selectedSymbol] = uncoveredSymbols[selectedSymbol] ? uncoveredSymbols[selectedSymbol]+1 : 1;
 
 								if(uncoveredSymbols[selectedSymbol] === 3) {
-									if(speechSynthesis && speechSynthesis.speak) {
-										//speechSynthesis.speak(new SpeechSynthesisUtterance("Congratulations!  You found three of the "+selectedSymbol));
-									}
-
 									gameMode = gameModes.FINISHED;
-									ui.setHTML("message", "<br />Congratulations!  You found three "+symbolPlurals[selectedSymbol]+"!");
-									ui.fadeIn("message", "1s");
-
 									setTimeout(function() {
-										ui.fadeOut("message", "1s");
-										setTimeout(function() {
-											ui.setHTML("message", "<br /><br />You've finished the game!<br /><br />Reload the page to play again");
-											ui.fadeIn("message", "1s");
-										}, 1000);
-									}, 3000);
-								
+										finishScreen(selectedSymbol);
+									}, 500);
 								}
 							}
 						}
@@ -346,6 +339,38 @@
 				});
 				
 				tween.start();
+			}
+
+			function finishScreen(winningSymbol) {
+				if(speechSynthesis && speechSynthesis.speak) {
+					//speechSynthesis.speak(new SpeechSynthesisUtterance("Congratulations!  You found three of the "+winningSymbol));
+				}
+
+				ui.setHTML("message", "<br />Congratulations!  You found three "+symbolPlurals[winningSymbol]+"!");
+				ui.fadeIn("message", "1s");
+
+
+
+				var winningSymbolsDisplay = sceneLoader.inflate([prefabs[winningSymbol], prefabs[winningSymbol], prefabs[winningSymbol]], prefabs);
+
+				winningSymbolsDisplay[0].position.set( -1, -1.5, -5);
+				winningSymbolsDisplay[1].position.set( 0, -1.5, -5);
+				winningSymbolsDisplay[2].position.set( 1, -1.5, -5);
+
+				winningSymbolsDisplay.forEach(function(item) {
+					item.scale.set(0.25, 0.25, 0.25);
+					camera.add(item);
+				});
+
+    			
+
+				setTimeout(function() {
+					ui.fadeOut("message", "1s");
+					setTimeout(function() {
+						ui.setHTML("message", "<br /><br />You've finished the game!<br /><br />Reload the page to play again");
+						ui.fadeIn("message", "1s");
+					}, 1000);
+				}, 3000);
 			}
 
 		</script>
