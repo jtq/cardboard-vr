@@ -11,31 +11,31 @@
 			{ "name":"ceiling", "geo":"BoxGeometry", "dim":[50,1,100], "col":"0xc08000", "pos":[0,19.5,0], "rot":[0,0,0] }
 		] },
 
-		{ "name":"Chest", "prefab":"chest", "pos":[15,0,-35], "rot":[0,10,0] },
-		{ "name":"Chest", "prefab":"chest", "pos":[20,0,-30], "rot":[0,-90,0] },
+		{ "name":"Chest1", "prefab":"chest", "pos":[15,0,-35], "rot":[0,10,0] },
+		{ "name":"Chest2", "prefab":"chest", "pos":[20,0,-30], "rot":[0,-90,0] },
 
-		{ "name":"Chest", "prefab":"chest", "pos":[10,0,-5], "rot":[0,-105,0] },
+		{ "name":"Chest3", "prefab":"chest", "pos":[10,0,-5], "rot":[0,-105,0] },
 
 		{ "pos":[10,0,20], "rot":[0,0,0], "children":[
 			{"rot":[0,-120,0], "children":[
-				{ "name":"Chest", "prefab":"chest", "pos":[0,0.2,-1.5], "rot":[-10,0,0] }
+				{ "name":"Chest4", "prefab":"chest", "pos":[0,0.2,-1.5], "rot":[-10,0,0] }
 			]},
 			{ "name":"Books", "prefab":"pileobooks", "rot":[0,10,0] }
 		] },
 
 
-		{ "name":"Chest", "prefab":"chest", "pos":[3,0,30], "rot":[0,56,0] },
+		{ "name":"Chest5", "prefab":"chest", "pos":[3,0,30], "rot":[0,56,0] },
 
-		{ "name":"Chest", "prefab":"chest", "pos":[-20,0,28], "rot":[0,165,0] },
+		{ "name":"Chest6", "prefab":"chest", "pos":[-20,0,28], "rot":[0,165,0] },
 
 
 		{ "pos":[-20.5,10.1,4.5], "rot":[2,0,0], "children":[
-			{ "name":"Chest", "prefab":"chest", "rot":[0,90,0] }
+			{ "name":"Chest7", "prefab":"chest", "rot":[0,90,0] }
 		] },
 
-		{ "name":"Chest", "prefab":"chest", "pos":[-8,0,-10], "rot":[0,40,0] },
+		{ "name":"Chest8", "prefab":"chest", "pos":[-8,0,-10], "rot":[0,40,0] },
 
-		{ "name":"Chest", "prefab":"chest", "pos":[-20,0,-45], "rot":[0,45,0] }
+		{ "name":"Chest9", "prefab":"chest", "pos":[-20,0,-45], "rot":[0,45,0] }
 	],
 	"animations": {
 		"open": [
@@ -43,20 +43,11 @@
 		],
 		"risespin": [
 			{ "delay": 0,	"time": 0, "prop": "material",	"val": { "opacity":0.1 } },
-			{ "delay": 500,	"time": 1000, "prop": "material",	"val": { "opacity":0.9 } },
+			{ "delay": 500,	"time": 2000, "prop": "material",	"val": { "opacity":0.9 } },
 
 			{ "delay": 500,	"time": 1000, "prop": "position",	"val": { "x":0, "y": 7.5, "z": 0 } },
 
-			{ "delay": 0,		"time": 1000, "prop": "rotation",	"val": { "x":0, "y": 3.141, "z": 0 } },
-			{ "delay": 1000,	"time": 500, "prop": "rotation",	"val": { "x":0, "y": 4.712, "z": 0 } },
-			{ "delay": 1500,	"time": 500, "prop": "rotation",	"val": { "x":0, "y": 6.283, "z": 0 } },
-			{ "delay": 2000,	"time": 0, "prop": "rotation",	"val": { "x":0, "y": 0, "z": 0 } },
-
-			{ "delay": 2010,	"time": 1000, "prop": "rotation",	"val": { "x":0, "y": 3.141, "z": 0 } },
-			{ "delay": 3000,	"time": 500, "prop": "rotation",	"val": { "x":0, "y": 4.712, "z": 0 } },
-			{ "delay": 3500,	"time": 500, "prop": "rotation",	"val": { "x":0, "y": 6.283, "z": 0 } },
-			{ "delay": 5000,	"time": 0, "prop": "rotation",	"val": { "x":0, "y": 0, "z": 0 } }
-
+			{ "delay": 0,		"time": 5000, "prop": "rotation",	"val": { "x":0, "y": 12.564, "z": 0 } }
 		],
 		"growSpin": [
 			{ "time": 500,	"prop": "scale",	"val": { "x": 2, "y": 2, "z": 2 } },
@@ -90,6 +81,15 @@
 		]
 	},
 	"prefabs": {
+		"ring": { "geo":"TorusGeometry", "dim":[1,0.25,8,20], "col":"0xffe000", "rot":[0,0,0] },
+		"diamond": { "geo":"OctahedronGeometry", "dim":[1,0], "col":"0x00ffff", "rot":[0,0,0] },
+		"cone": { "geo":"CylinderGeometry", "dim":[0,1,2,8,1], "col":"0xff0000", "rot":[0,0,0] },
+		"cylinder": { "geo":"CylinderGeometry", "dim":[1,1,2,8,3], "col":"0x00ff00", "rot":[0,0,0] },
+		"icosahedron": { "geo":"IcosahedronGeometry", "dim":[1,0], "col":"0x8080ff", "rot":[0,0,0] },
+		"sphere": { "geo":"SphereGeometry", "dim":[1,10,10], "col":"0xffffff", "rot":[0,0,0] },
+		"simpleknot": { "geo":"TorusKnotGeometry", "dim":[0.75,0.25,64,20,1,2], "col":"0x0000ff", "rot":[0,0,0] },
+		"complexknot": { "geo":"TorusKnotGeometry", "dim":[0.75,0.25,64,20,2,3], "col":"0xff00ff", "rot":[0,0,0] },
+
 		"chest": { "selectable":true, "children": [
 
 			{ "name":"body", "selectable":true, "children": [
@@ -124,7 +124,7 @@
 			] },
 
 			{ "name":"symbol", "selectable":true, "onActivate":"risespin", "pos":[0,1.5,0], "children": [
-				{ "geo":"OctahedronGeometry", "dim":[1,0], "col":"0x00ffff", "rot":[0,30,0] }
+				{ "name":"placeholder" }
 			] }
 		] },
 		"bookclosed": { "selectable":true, "children": [

@@ -12,15 +12,23 @@ var sceneLoader = {
 		request.send();
 	},
 
+	build: function(objData, prefabs) {
+		return objData.map(function(obj) {
+			if(obj.prefab && prefabs[obj.prefab]) {
+				obj = this.merge(prefabs[obj.prefab], obj);	// Turn obj into the prefab, then merge any fields defined in obj back over the top
+			}
+			if(obj.children) {
+				obj.children = this.build(obj.children, prefabs);
+			}
+			return obj;
+		}.bind(this));
+	},
+
 	inflate: function(objData, prefabs) {
 
 		var meshes = [];
 
 		objData.forEach(function(obj) {
-
-			if(obj.prefab && prefabs[obj.prefab]) {
-				obj = this.merge(prefabs[obj.prefab], obj);	// Turn obj into the prefab, then merge any fields defined in obj back over the top
-			}
 
 			var dim = obj.dim instanceof Array ? obj.dim : [];
 			var pos = obj.pos instanceof Array ? obj.pos : [0,0,0];
