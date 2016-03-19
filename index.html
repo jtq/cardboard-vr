@@ -68,7 +68,49 @@
 
 			sceneLoader.load("scene.json", function (data) {
 				animations = data.animations;
-		    	objects = sceneLoader.inflate(data.objects, data.prefabs);
+
+				// Inject different symbols into chests
+				var built = sceneLoader.build(data.objects, data.prefabs);
+				var symbols = ["diamond", "cylinder", "cone", "icosahedron", "sphere", "ring", "simpleknot", "complexknot"];
+				var winningIndex = Math.floor(Math.random()*symbols.length);
+				var winningSymbol = symbols.splice(winningIndex, 1)[0];
+
+				var losingSymbols = symbols.concat(symbols);	// At most two of each losing symbol
+
+				var randomIndex;
+
+				var selectedSymbols = [];
+				while(selectedSymbols.length < 6) {
+					randomIndex = Math.floor(Math.random()*losingSymbols.length);
+					var losingSymbol = losingSymbols.splice(randomIndex, 1)[0];
+					selectedSymbols.push(losingSymbol);
+				}
+
+				for(var i=0; i<3; i++) {
+					randomIndex = Math.floor(Math.random()*losingSymbols.length);
+					selectedSymbols.splice(randomIndex, 0, winningSymbol);
+				}
+
+				var chests = [];
+
+				function findChests(objects) {
+					objects.forEach(function(obj) {
+						if(obj.prefab === "chest") {
+							chests.push(obj);
+						}
+						else if(obj.children) {
+							findChests(obj.children);
+						}
+					});
+				}
+				findChests(built);
+
+				chests.forEach(function(chest, index) {
+					var symbol = selectedSymbols[index];
+					chest.children[2].children[0] = sceneLoader.merge({}, data.prefabs[symbol]);
+				});
+		    	
+		    	objects = sceneLoader.inflate(built, data.prefabs);
 		        init();
 			});
 
