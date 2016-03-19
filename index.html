@@ -6,6 +6,7 @@
 		<script src="lib/Detector.js"></script>
 		<script src="lib/StereoEffect.js"></script>
 		<script src="lib/DeviceOrientationController.js"></script>
+		<script src="UI.js"></script>
 		<script src="SceneLoader.js"></script>
 		<script src="Tween.js"></script>
 		<style type="text/css">
@@ -21,8 +22,10 @@
 			canvas {
 				display: block;
 			}
-			.reticle {
+			.ui {
 				position: absolute;
+			}
+			.reticle {
 				background-color: #ff0000;
 				border-radius: 2px;
 				width: 5px;
@@ -31,21 +34,35 @@
 				display: block;
 				transform: translate(-50%, -50%);	/* Set hot-point to centre of element*/
 			}
-			.reticle-left {
+			.left {
 				left: 25%;
+				transform: translateX(-50%);
 			}
-			.reticle-right {
+			.right {
 				left: 75%;
+				transform: translateX(-50%);
 			}
-			#ui {
-				position: absolute;
+			#interactionButton {
 				background-color: #ff0000;
 				width: 10%;
 				height: 30%;
 				top: 0;
 				left: 50%;
 				transform: translateX(-50%);
+			}
+			.message {
+				top: 25%;
+				width: 25%;
+				text-align: center;
+				font-size: 5vh;
 
+				color: #f0f0f0;
+
+				text-shadow:
+			   -1px -1px 1px #000,  
+			    1px -1px 1px #000,
+			   -1px  1px 1px #000,
+			    1px  1px 1px #000;
 			}
 		</style>
 	</head>
@@ -64,14 +81,40 @@
 
 			var ambientLight, pointLight;
 
-			var objects = [], animations = {};
+			var objects = [], animations = {}, prefabs = {};
+
+			var gameModes = {
+				WAIT: 0,
+				INTRO: 1,
+				INSTRUCTIONS1: 2,
+				INSTRUCTIONS2: 3,
+				PLAYING: 4,
+				FINISHED: 5
+			}
+			var gameMode = gameModes.WAIT;
+
+			var symbols = ["diamond", "cylinder", "cone", "icosahedron", "sphere", "ring", "loop", "pretzel"];
+			var symbolPlurals = {
+				diamond: "diamonds",
+				cylinder: "cylinders",
+				cone: "cones",
+				icosahedron: "icosahedra",
+				sphere: "spheres",
+				ring:"rings",
+				loop:"loops",
+				pretzel: "pretzels"
+			};
+			var uncoveredSymbols = {};
+
+			var winningSymbolsDisplay = null;
 
 			sceneLoader.load("scene.json", function (data) {
 				animations = data.animations;
+				prefabs = data.prefabs;
 
 				// Inject different symbols into chests
-				var built = sceneLoader.build(data.objects, data.prefabs);
-				var symbols = ["diamond", "cylinder", "cone", "icosahedron", "sphere", "ring", "simpleknot", "complexknot"];
+				var built = sceneLoader.build(data.objects, prefabs);
+
 				var winningIndex = Math.floor(Math.random()*symbols.length);
 				var winningSymbol = symbols.splice(winningIndex, 1)[0];
 
@@ -110,7 +153,7 @@
 					chest.children[2].children[0] = sceneLoader.merge({}, data.prefabs[symbol]);
 				});
 		    	
-		    	objects = sceneLoader.inflate(built, data.prefabs);
+		    	objects = sceneLoader.inflate(built, prefabs);
 		        init();
 			});
 
@@ -120,11 +163,13 @@
 				container.id = "container";
 				document.body.appendChild( container );
 
+				scene = new THREE.Scene();
+
 				// Set up camera, scene, renderer, etc
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 100000 );
 				camera.position.set(0, 10, 0);
 
-				scene = new THREE.Scene();
+				scene.add(camera);	// winningSymbols object is added to camera, so camera must be added to scene
 
 				renderer = new THREE.WebGLRenderer({ alpha: true });
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -187,43 +232,100 @@
 
 			function setUpUI() {
 
-				var ui = document.createElement('div');
-				ui.id = "ui";
-				document.body.appendChild(ui);
+				// Interaction button
+				var interactionButton = document.createElement('div');
+				interactionButton.className = "ui";
+				interactionButton.id = "interactionButton";
+				document.body.appendChild(interactionButton);
 
-				ui.addEventListener('click', interact);
+				interactionButton.addEventListener('click', interact);
 
-				ui.addEventListener('dblclick', function() {
-					document.location.reload(true);
-				});
+				// Reticle/pointer
+				var reticle = document.createElement("div");
+				reticle.className = "reticle";
+				ui.add("reticle", reticle);
 
-				var reticleL = document.createElement("div");
-				reticleL.className = "reticle reticle-left";
-				document.body.appendChild(reticleL);
+				// Success message
+				var messagePrototype = document.createElement("div");
+				messagePrototype.className = "message";
+				messagePrototype.style.opacity = 0;
+				var messageUiElements = ui.add("message", messagePrototype);
 
-				var reticleR = document.createElement("div");
-				reticleR.className = "reticle reticle-right";
-				document.body.appendChild(reticleR);
+				setTimeout(function() {
+					ui.setHTML("message", "<br /><strong>Welcome to the VR IWG prototype demo</strong><br /><br /><span style='font-weight: small;'>Press button to continue...</span>");
+					ui.fadeIn("message", "1s");
+					gameMode = gameModes.INTRO;
+				}, 1000);
 			}
 
 			function interact() {
-				// Project ray from camera into scene and find closest object (if any) it intersects with
-				var raycaster = new THREE.Raycaster();
-				raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
 
-				var intersects = raycaster.intersectObjects(objects, true);
+				if(gameMode === gameModes.WAIT) {
+					return;	// Animation/transition/setTimeout is in-flight, so disable interactions until it finishes and re-enables a game-mode
+				}
 
-				if(intersects.length > 0) {
-					var intersect = intersects[0];
-					var object = intersect.object;
-					while(object.parent && object.parent.selectable) {	// If child element selected, activate the highest selectable ancestor container
-						object = object.parent;
+				if(gameMode === gameModes.INTRO) {
+
+					gameMode = gameModes.WAIT;
+					ui.fadeOut("message", "1s");
+					setTimeout(function() {
+						ui.setHTML("message", "<br />The red dot is your pointer<br />⇩<br /><br />Press the button to interact with objects...");
+						ui.fadeIn("message", "1s");
+						gameMode = gameModes.INSTRUCTIONS1;
+					}, 1500);
+					
+				}
+				else if(gameMode === gameModes.INSTRUCTIONS1) {
+
+					gameMode = gameModes.WAIT;
+					ui.fadeOut("message", "1s");
+					setTimeout(function() {
+						ui.setHTML("message", "<br />Open all the chests to reveal your symbols.<br /><br />Don't forget to look behind you...");
+						ui.fadeIn("message", "1s");
+						gameMode = gameModes.INSTRUCTIONS2;
+					}, 1500);
+					
+				}
+				else if(gameMode === gameModes.INSTRUCTIONS2) {
+
+					gameMode = gameModes.PLAYING;
+					ui.fadeOut("message", "1s");
+				}
+				else if(gameMode === gameModes.PLAYING || gameMode === gameModes.FINISHED) {
+					// Project ray from camera into scene and find closest object (if any) it intersects with
+					var raycaster = new THREE.Raycaster();
+					raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+
+					var intersects = raycaster.intersectObjects(objects, true);
+
+					if(intersects.length > 0) {
+						var intersect = intersects[0];
+						var object = intersect.object;
+						while(object.parent && object.parent.selectable) {	// If child element selected, activate the highest selectable ancestor container
+							object = object.parent;
+						}
+
+						activate(object);	// Let players in a finished game activate left-over objects if they like, for novelty value
+
+						if(gameMode === gameModes.PLAYING) {
+
+							var symbolWrapper = object.getObjectByName("symbol");
+
+							if(symbolWrapper) {
+
+								var selectedSymbol = symbolWrapper.children[0].name;
+
+								uncoveredSymbols[selectedSymbol] = uncoveredSymbols[selectedSymbol] ? uncoveredSymbols[selectedSymbol]+1 : 1;
+
+								if(uncoveredSymbols[selectedSymbol] === 3) {
+									gameMode = gameModes.FINISHED;
+									setTimeout(function() {
+										finishScreen(selectedSymbol);
+									}, 500);
+								}
+							}
+						}
 					}
-
-					/*if(speechSynthesis && speechSynthesis.speak) {
-						speechSynthesis.speak(new SpeechSynthesisUtterance(object.name));
-					}*/
-					activate(object);
 				}
 			}
 
@@ -237,6 +339,38 @@
 				});
 				
 				tween.start();
+			}
+
+			function finishScreen(winningSymbol) {
+				if(speechSynthesis && speechSynthesis.speak) {
+					//speechSynthesis.speak(new SpeechSynthesisUtterance("Congratulations!  You found three of the "+winningSymbol));
+				}
+
+				ui.setHTML("message", "<br />Congratulations!  You found three "+symbolPlurals[winningSymbol]+"!");
+				ui.fadeIn("message", "1s");
+
+
+
+				var winningSymbolsDisplay = sceneLoader.inflate([prefabs[winningSymbol], prefabs[winningSymbol], prefabs[winningSymbol]], prefabs);
+
+				winningSymbolsDisplay[0].position.set( -1, -1.5, -5);
+				winningSymbolsDisplay[1].position.set( 0, -1.5, -5);
+				winningSymbolsDisplay[2].position.set( 1, -1.5, -5);
+
+				winningSymbolsDisplay.forEach(function(item) {
+					item.scale.set(0.25, 0.25, 0.25);
+					camera.add(item);
+				});
+
+    			
+
+				setTimeout(function() {
+					ui.fadeOut("message", "1s");
+					setTimeout(function() {
+						ui.setHTML("message", "<br /><br />You've finished the game!<br /><br />Reload the page to play again");
+						ui.fadeIn("message", "1s");
+					}, 1000);
+				}, 3000);
 			}
 
 		</script>

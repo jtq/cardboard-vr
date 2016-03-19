@@ -13,6 +13,9 @@ var sceneLoader = {
 	},
 
 	build: function(objData, prefabs) {
+		if(!(objData instanceof Array)) {
+			objData = [objData];
+		}
 		return objData.map(function(obj) {
 			if(obj.prefab && prefabs[obj.prefab]) {
 				obj = this.merge(prefabs[obj.prefab], obj);	// Turn obj into the prefab, then merge any fields defined in obj back over the top
@@ -25,6 +28,10 @@ var sceneLoader = {
 	},
 
 	inflate: function(objData, prefabs) {
+
+		if(!(objData instanceof Array)) {
+			objData = [objData];
+		}
 
 		var meshes = [];
 
