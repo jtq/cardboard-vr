@@ -81,14 +81,14 @@
 		]
 	},
 	"prefabs": {
-		"ring": { "geo":"TorusGeometry", "dim":[1,0.25,8,20], "col":"0xffe000", "rot":[0,0,0] },
-		"diamond": { "geo":"OctahedronGeometry", "dim":[1,0], "col":"0x00ffff", "rot":[0,0,0] },
-		"cone": { "geo":"CylinderGeometry", "dim":[0,1,2,8,1], "col":"0xff0000", "rot":[0,0,0] },
-		"cylinder": { "geo":"CylinderGeometry", "dim":[1,1,2,8,3], "col":"0x00ff00", "rot":[0,0,0] },
-		"icosahedron": { "geo":"IcosahedronGeometry", "dim":[1,0], "col":"0x8080ff", "rot":[0,0,0] },
-		"sphere": { "geo":"SphereGeometry", "dim":[1,10,10], "col":"0xffffff", "rot":[0,0,0] },
-		"simpleknot": { "geo":"TorusKnotGeometry", "dim":[0.75,0.25,64,20,1,2], "col":"0x0000ff", "rot":[0,0,0] },
-		"complexknot": { "geo":"TorusKnotGeometry", "dim":[0.75,0.25,64,20,2,3], "col":"0xff00ff", "rot":[0,0,0] },
+		"ring": { "name":"ring", "geo":"TorusGeometry", "dim":[1,0.25,8,20], "col":"0xffe000", "rot":[0,0,0] },
+		"diamond": { "name":"diamond", "geo":"OctahedronGeometry", "dim":[1,0], "col":"0x00ffff", "rot":[0,0,0] },
+		"cone": { "name":"cone", "geo":"CylinderGeometry", "dim":[0,1,2,8,1], "col":"0xff0000", "rot":[0,0,0] },
+		"cylinder": { "name":"cylinder", "geo":"CylinderGeometry", "dim":[1,1,2,8,3], "col":"0x00ff00", "rot":[0,0,0] },
+		"icosahedron": { "name":"icosahedron", "geo":"IcosahedronGeometry", "dim":[1,0], "col":"0x8080ff", "rot":[0,0,0] },
+		"sphere": { "name":"sphere", "geo":"SphereGeometry", "dim":[1,10,10], "col":"0xffffff", "rot":[0,0,0] },
+		"simpleknot": { "name":"simpleknot", "geo":"TorusKnotGeometry", "dim":[0.75,0.25,64,20,1,2], "col":"0x0000ff", "rot":[0,0,0] },
+		"complexknot": { "name":"complexknot", "geo":"TorusKnotGeometry", "dim":[0.75,0.25,64,20,2,3], "col":"0xff00ff", "rot":[0,0,0] },
 
 		"chest": { "selectable":true, "children": [
 
@@ -123,9 +123,7 @@
 				] }
 			] },
 
-			{ "name":"symbol", "selectable":true, "onActivate":"risespin", "pos":[0,1.5,0], "children": [
-				{ "name":"placeholder" }
-			] }
+			{ "name":"symbol", "selectable":true, "onActivate":"risespin", "pos":[0,1.5,0], "children": [] }
 		] },
 		"bookclosed": { "selectable":true, "children": [
 			{ "name":"pages", "geo":"BoxGeometry", "dim":[1.4,0.25,0.65], "col":"0xf8f8f8" },
