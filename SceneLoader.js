@@ -40,6 +40,7 @@ var sceneLoader = {
 			var dim = obj.dim instanceof Array ? obj.dim : [];
 			var pos = obj.pos instanceof Array ? obj.pos : [0,0,0];
 			var rot = obj.rot instanceof Array ? obj.rot : [0,0,0];
+			var scale = obj.scale instanceof Array ? obj.scale : [1,1,1];
 			var geo = obj.geo || "ManipulableGroup";
 			var col = Number(obj.col) || 0xc0c0c0;
 
@@ -52,7 +53,7 @@ var sceneLoader = {
 			var constructorArgs = [].concat(objType, dim.slice() || []);
 			var objConstructor = objType.bind.apply(objType, constructorArgs);
 			var geometry = new objConstructor();
-			var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color:col }));
+			var mesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ color:col, shading : THREE.SmoothShading }));
 
 			if(geo === "ManipulableGroup") {
 				mesh.material.visible = false;
@@ -89,8 +90,17 @@ var sceneLoader = {
 					}
 				});
 			}
+			else {
+				if(obj.castShadow){
+					mesh.castShadow = true;
+				}
+				if(obj.receiveShadow){
+					mesh.receiveShadow = true;
+				}
+			}
 
 			mesh.position.set(pos[0], pos[1], pos[2]);
+			mesh.scale.set(scale[0], scale[1], scale[2]);
 			mesh.rotation.set(deg2rad(rot[0]), deg2rad(rot[1]), deg2rad(rot[2]));
 			mesh.name = obj.name;
 
@@ -102,6 +112,15 @@ var sceneLoader = {
 			}
 
 			if(obj.children) {
+				obj.children.forEach(function(child) {
+					if(obj.castShadow && typeof child.castShadow === "undefined") {
+						child.castShadow = obj.castShadow;
+					}
+					if(obj.receiveShadow && typeof child.receiveShadow === "undefined") {
+						child.receiveShadow = obj.receiveShadow;
+					}
+				});
+						
 				var kids = this.inflate(obj.children, prefabs);
 				kids.forEach(function(child) {
 		    		mesh.add(child);

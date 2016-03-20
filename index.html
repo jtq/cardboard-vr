@@ -83,6 +83,7 @@
 
 			var objects = [], animations = {}, prefabs = {};
 
+			var skipIntro = false;
 			var gameModes = {
 				WAIT: 0,
 				INTRO: 1,
@@ -91,7 +92,7 @@
 				PLAYING: 4,
 				FINISHED: 5
 			}
-			var gameMode = gameModes.WAIT;
+			var gameMode = skipIntro ? gameModes.PLAYING : gameModes.WAIT;
 
 			var symbols = ["diamond", "cylinder", "cone", "icosahedron", "sphere", "ring", "loop", "pretzel"];
 			var symbolPlurals = {
@@ -171,8 +172,11 @@
 
 				scene.add(camera);	// winningSymbols object is added to camera, so camera must be added to scene
 
-				renderer = new THREE.WebGLRenderer({ alpha: true });
+				renderer = new THREE.WebGLRenderer({ alpha: true, antialias : true });
 				renderer.setPixelRatio( window.devicePixelRatio );
+				/*renderer.shadowMap.enabled = true;
+				renderer.shadowMapSoft = true;
+				renderer.shadowMap.type = THREE.PCFSoftShadowMap;*/
 				container.appendChild( renderer.domElement );
 
 				controls = new DeviceOrientationController( camera, renderer.domElement );
@@ -192,8 +196,14 @@
 				scene.add( ambientLight );
 
 				pointLight = new THREE.PointLight( 0xFFFFFF );
-				pointLight.position.set(-20, 20, -20 );
+				pointLight.position.set(-10, 18, -18);
 				pointLight.lookAt(scene.position);
+
+				/*pointLight.castShadow = true;
+				pointLight.shadow.camera.near = 0.01;
+				scene.add(new THREE.CameraHelper( pointLight.shadow.camera ));*/
+
+
 				scene.add( pointLight );
 
 				// User interface
@@ -251,11 +261,13 @@
 				messagePrototype.style.opacity = 0;
 				var messageUiElements = ui.add("message", messagePrototype);
 
-				setTimeout(function() {
-					ui.setHTML("message", "<br /><strong>Welcome to the VR IWG prototype demo</strong><br /><br /><span style='font-weight: small;'>Press button to continue...</span>");
-					ui.fadeIn("message", "1s");
-					gameMode = gameModes.INTRO;
-				}, 1000);
+				if(gameMode === gameModes.WAIT) {
+					setTimeout(function() {
+						ui.setHTML("message", "<br /><strong>Welcome to the VR IWG prototype demo</strong><br /><br /><span style='font-weight: small;'>Press button to continue...</span>");
+						ui.fadeIn("message", "1s");
+						gameMode = gameModes.INTRO;
+					}, 1000);
+				}
 			}
 
 			function interact() {
