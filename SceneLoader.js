@@ -53,7 +53,7 @@ var sceneLoader = {
 			var constructorArgs = [].concat(objType, dim.slice() || []);
 			var objConstructor = objType.bind.apply(objType, constructorArgs);
 			var geometry = new objConstructor();
-			var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color:col }));
+			var mesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ color:col, shading : THREE.SmoothShading }));
 
 			if(geo === "ManipulableGroup") {
 				mesh.material.visible = false;
