@@ -83,6 +83,7 @@
 
 			var objects = [], animations = {}, prefabs = {};
 
+			var skipIntro = true;
 			var gameModes = {
 				WAIT: 0,
 				INTRO: 1,
@@ -91,7 +92,7 @@
 				PLAYING: 4,
 				FINISHED: 5
 			}
-			var gameMode = gameModes.WAIT;
+			var gameMode = skipIntro ? gameModes.PLAYING : gameModes.WAIT;
 
 			var symbols = ["diamond", "cylinder", "cone", "icosahedron", "sphere", "ring", "loop", "pretzel"];
 			var symbolPlurals = {
@@ -251,11 +252,13 @@
 				messagePrototype.style.opacity = 0;
 				var messageUiElements = ui.add("message", messagePrototype);
 
-				setTimeout(function() {
-					ui.setHTML("message", "<br /><strong>Welcome to the VR IWG prototype demo</strong><br /><br /><span style='font-weight: small;'>Press button to continue...</span>");
-					ui.fadeIn("message", "1s");
-					gameMode = gameModes.INTRO;
-				}, 1000);
+				if(gameMode === gameModes.WAIT) {
+					setTimeout(function() {
+						ui.setHTML("message", "<br /><strong>Welcome to the VR IWG prototype demo</strong><br /><br /><span style='font-weight: small;'>Press button to continue...</span>");
+						ui.fadeIn("message", "1s");
+						gameMode = gameModes.INTRO;
+					}, 1000);
+				}
 			}
 
 			function interact() {
