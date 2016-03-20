@@ -90,6 +90,14 @@ var sceneLoader = {
 					}
 				});
 			}
+			else {
+				if(obj.castShadow){
+					mesh.castShadow = true;
+				}
+				if(obj.receiveShadow){
+					mesh.receiveShadow = true;
+				}
+			}
 
 			mesh.position.set(pos[0], pos[1], pos[2]);
 			mesh.scale.set(scale[0], scale[1], scale[2]);
@@ -104,6 +112,15 @@ var sceneLoader = {
 			}
 
 			if(obj.children) {
+				obj.children.forEach(function(child) {
+					if(obj.castShadow && typeof child.castShadow === "undefined") {
+						child.castShadow = obj.castShadow;
+					}
+					if(obj.receiveShadow && typeof child.receiveShadow === "undefined") {
+						child.receiveShadow = obj.receiveShadow;
+					}
+				});
+						
 				var kids = this.inflate(obj.children, prefabs);
 				kids.forEach(function(child) {
 		    		mesh.add(child);
