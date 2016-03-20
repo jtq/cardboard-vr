@@ -40,6 +40,7 @@ var sceneLoader = {
 			var dim = obj.dim instanceof Array ? obj.dim : [];
 			var pos = obj.pos instanceof Array ? obj.pos : [0,0,0];
 			var rot = obj.rot instanceof Array ? obj.rot : [0,0,0];
+			var scale = obj.scale instanceof Array ? obj.scale : [1,1,1];
 			var geo = obj.geo || "ManipulableGroup";
 			var col = Number(obj.col) || 0xc0c0c0;
 
@@ -91,6 +92,7 @@ var sceneLoader = {
 			}
 
 			mesh.position.set(pos[0], pos[1], pos[2]);
+			mesh.scale.set(scale[0], scale[1], scale[2]);
 			mesh.rotation.set(deg2rad(rot[0]), deg2rad(rot[1]), deg2rad(rot[2]));
 			mesh.name = obj.name;
 
