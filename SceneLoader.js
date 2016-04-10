@@ -42,7 +42,6 @@ var sceneLoader = {
 			var rot = obj.rot instanceof Array ? obj.rot : [0,0,0];
 			var scale = obj.scale instanceof Array ? obj.scale : [1,1,1];
 			var geo = obj.geo || "ManipulableGroup";
-			var col = Number(obj.col) || 0xc0c0c0;
 
 			// Now we need to dynamically call THREE[geo] as a constructor, while also passing in a dynamic array of parameters.
 			// However the "new" operator and Function.apply() don't play nicely together, so first we need to produce a standaone constructor
@@ -53,7 +52,17 @@ var sceneLoader = {
 			var constructorArgs = [].concat(objType, dim.slice() || []);
 			var objConstructor = objType.bind.apply(objType, constructorArgs);
 			var geometry = new objConstructor();
-			var mesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ color:col, shading : THREE.SmoothShading }));
+
+			var materialConfig = { shading: THREE.SmoothShading };
+			if(obj.tex) {
+				materialConfig.map = new THREE.TextureLoader().load('textures/' + obj.tex);
+			}
+			else {
+				materialConfig.color = Number(obj.col) || 0xc0c0c0;
+			}
+			
+			var material = new THREE.MeshPhongMaterial(materialConfig);
+			var mesh = new THREE.Mesh(geometry, material);
 
 			if(geo === "ManipulableGroup") {
 				mesh.material.visible = false;
