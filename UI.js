@@ -27,21 +27,51 @@ var ui = {
 			element.innerHTML = html;
 		});
 	},
-	fadeIn: function(elements, time) {
+	fadeIn: function(elements, time, callback) {
 
 		time = time || "1s";
 
 		this.toArray(elements).forEach(function(element) {
+			
+			if(callback) {
+				function transitionEnd(event) {
+					element.removeEventListener("transitionend", transitionEnd);
+					callback(element, event);
+				}
+
+				element.addEventListener("transitionend", transitionEnd);
+			}
+
 			element.style.transition = "opacity "+time;
 			element.style.opacity = 1;
 		});
 	},
-	fadeOut: function(elements, time) {
+	fadeOut: function(elements, time, callback) {
 		time = time || "1s";
 
 		this.toArray(elements).forEach(function(element) {
+			
+			if(callback) {
+				function transitionEnd(event) {
+					element.removeEventListener("transitionend", transitionEnd);
+					callback(element, event);
+				}
+
+				element.addEventListener("transitionend", transitionEnd);
+			}
+
 			element.style.transition = "opacity "+time;
 			element.style.opacity = 0;
+		});
+	},
+	hide: function(elements) {
+		this.toArray(elements).forEach(function(element) {
+			element.style.display = "none";
+		});
+	},
+	show: function(elements) {
+		this.toArray(elements).forEach(function(element) {
+			element.style.display = "block";
 		});
 	},
 	toArray: function(thing) {
