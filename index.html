@@ -12,7 +12,6 @@
 		<style type="text/css">
 			body {
 				margin: 0;
-				background-image: linear-gradient(90deg, #dddddd 49%, #ff0000 50%, #dddddd 51%);
 				overflow-y: visible;
 				overflow-x: hidden;
 			}
@@ -286,9 +285,11 @@
 				ui.add("reticle", reticle);
 
 				// Overlay
-				overlay = document.createElement("div");
-				overlay.className = "overlay ui";
-				document.body.appendChild(overlay);
+				if(!skipIntro) {
+					overlay = document.createElement("div");
+					overlay.className = "overlay ui";
+					document.body.appendChild(overlay);
+				}
 
 				// Success message
 				var messagePrototype = document.createElement("div");
