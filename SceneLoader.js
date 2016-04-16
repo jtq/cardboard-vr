@@ -56,6 +56,13 @@ var sceneLoader = {
 			var materialConfig = { shading: THREE.SmoothShading };
 			if(obj.tex) {
 				materialConfig.map = new THREE.TextureLoader().load('textures/' + obj.tex);
+				if(obj.trepx) {
+					materialConfig.map.wrapS = THREE.RepeatWrapping;
+				}
+				if(obj.trepy) {
+					materialConfig.map.wrapT = THREE.RepeatWrapping;
+				}
+				materialConfig.map.repeat.set(Number(obj.trepx) || 1, Number(obj.trepy) || 1);
 			}
 			else {
 				materialConfig.color = Number(obj.col) || 0xc0c0c0;
